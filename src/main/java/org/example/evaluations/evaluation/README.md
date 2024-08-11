@@ -3,6 +3,8 @@
 ## Your project requires use of KeyVault and you need to add functionality in both AzureKeyVault and GoogleKeyVault so that they can be used in respective controllers
 
 ## Requirements
+If you don't know about Spring @Qualifier Annotation, please google it once to get more understanding.
+
 You need to complete saveSecret and retrieveSecret functions in both KeyVaults and use these keyvault implementations in respective controllers to achieve Dependency Injection using @Qualifier
 
 1. In AzureKeyVault, use TreeMap to internally save and retrieve secrets.
