@@ -44,8 +44,8 @@ public class OrderRepositoryTest {
     public void testGetAllOrders() {
         List<Order> orders = orderRepository.findAll();
         assertNotNull(orders,"Hashmap contains 2 orders");
-        assertEquals(1L,orders.get(0).getId(),"HashMap contain 2 orders, with Id 1 and 10");
-        assertEquals(10L,orders.get(1).getId(),"HashMap contain 2 orders, with Id 1 and 10");
+        assertEquals(1L,orders.get(0).getId(),"HashMap contain 2 orders and Id of first order is 1.");
+        assertEquals(10L,orders.get(1).getId(),"HashMap contain 2 orders and Id of second order is 10");
     }
 
     @Test

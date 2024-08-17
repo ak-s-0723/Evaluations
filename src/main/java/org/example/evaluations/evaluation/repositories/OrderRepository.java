@@ -22,7 +22,7 @@ public class OrderRepository {
     }
 
     public List<Order> findAll() {
-        //Please add logic for getting Orders HashMap
+        //Please add logic for getting Orders from HashMap
         return  null;
     }
 
