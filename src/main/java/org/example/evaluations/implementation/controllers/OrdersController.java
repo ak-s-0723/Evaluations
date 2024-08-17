@@ -6,6 +6,8 @@ import org.example.evaluations.implementation.services.IOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @RestController
 @RequestMapping("/orders")
 public class OrdersController {
@@ -16,5 +18,10 @@ public class OrdersController {
     @PostMapping
     public Order createOrder(@RequestBody OrderRequestDto orderRequestDto) {
       return orderService.createOrder(orderRequestDto.getCustomerId(),orderRequestDto.getTotalAmount());
+    }
+
+    @DeleteMapping("/{orderId}")
+    public Boolean deleteOrder(@PathVariable UUID orderId) {
+      return orderService.deleteOrder(orderId);
     }
 }

@@ -15,8 +15,13 @@ public class OrderRepo {
         orders = new HashMap<>();
     }
 
-    public Order save(Order order) {
+    public void save(Order order) {
         orders.put(order.getId(),order);
-        return orders.get(order.getId());
+    }
+
+    public Boolean remove(UUID orderId) {
+        Order order = orders.remove(orderId);
+        if(order != null) return true;
+        else return false;
     }
 }

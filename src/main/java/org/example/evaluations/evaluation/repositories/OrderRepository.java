@@ -18,4 +18,10 @@ public class OrderRepository {
     public void save(Order order) {
         orders.put(order.getId(),order);
     }
+
+    public Boolean remove(UUID orderId) {
+        Order order = orders.remove(orderId);
+        if(order != null) return true;
+        else return false;
+    }
 }

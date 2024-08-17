@@ -11,5 +11,5 @@ public class OrderController {
     @Autowired
     private IOrderService orderService;
 
-    //Please add POST Api here
+    //Please add APIs here
 }

@@ -24,6 +24,12 @@ public class OrderServiceImpl implements IOrderService {
         order.setId(UUID.randomUUID());
         order.setCreatedAt(new Date());
         order.setLastUpdatedAt(new Date());
-        return orderRepo.save(order);
+        orderRepo.save(order);
+        return order;
+    }
+
+    @Override
+    public Boolean deleteOrder(UUID orderId) {
+        return orderRepo.remove(orderId);
     }
 }

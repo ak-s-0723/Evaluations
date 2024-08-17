@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.UUID;
 
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -55,5 +56,17 @@ public class OrderControllerMvcTests {
         mockMvc.perform(post("/order").contentType(MediaType.APPLICATION_JSON).content(objectMapper.writeValueAsBytes(requestDto)))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(order)));
+    }
+
+    @Test
+    public void testdeleteOrderRunsSuccessfully() throws Exception {
+        //Arrange
+        UUID orderId = UUID.randomUUID();
+        when(orderService.deleteOrder(orderId)).thenReturn(true);
+
+        // Act & Assert
+        mockMvc.perform(delete("/order/{orderId}",orderId))
+                .andExpect(status().isOk())
+                .andExpect(content().string("true"));
     }
 }
