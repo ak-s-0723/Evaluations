@@ -12,6 +12,8 @@
       - GET  `/contractualEmployee/isOnboarded/email/{email}?empId={id}` - Here `empId` is optional query Parameter of datatype Long, which means it can be skipped as well. This Api will return Boolean Result.
       - GET  `/contractualEmployee/permissions?roles=val1,val2...` - Here roles is required query Parameter and we can provide multiple values in roles, so better consume roles through `List<String>`. This API will return `List<Permission>`. Permission model is already present inside models package.
       - GET `/contractualEmployee?email={email}&password={password}&name={name}` - Here all email,password and name are optional query parameters which means, all 3 parameters can be skipped as well. This Api will return Boolean result.
+   
+3. Please note route/path given in RequestMapping over `ContractualEmployeeController` to get what will be actual routes for your APIs.
 
 ## Hints
 1. You don't need to create any new file.
