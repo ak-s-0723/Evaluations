@@ -7,8 +7,8 @@ import java.util.Date;
 
 @Setter
 @Getter
-public class InventoryUpdateRequestDto {
+public class BookingUpdateRequestDto {
     private String guestName;
 
-    private Date date;
+    private String date;
 }
