@@ -3,6 +3,7 @@ package org.example.evaluations.evaluation.repositories;
 import org.example.evaluations.evaluation.models.Order;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class OrderRepository {
@@ -18,6 +19,11 @@ public class OrderRepository {
         //value in HashMap
 
         return null;
+    }
+
+    public List<Order> findAll() {
+        //Please add logic for getting Orders HashMap
+        return  null;
     }
 
     //Please don't delete below function

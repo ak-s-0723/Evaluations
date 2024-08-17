@@ -5,6 +5,8 @@ import org.example.evaluations.implementation.repositories.OrderRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class OrderServiceImpl implements IOrderService {
 
@@ -14,5 +16,10 @@ public class OrderServiceImpl implements IOrderService {
     @Override
     public Order getOrderById(Long orderId) {
        return orderRepo.findById(orderId);
+    }
+
+    @Override
+    public List<Order> getAllOrders() {
+        return orderRepo.findAll();
     }
 }

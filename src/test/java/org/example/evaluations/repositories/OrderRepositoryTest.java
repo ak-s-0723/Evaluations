@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -36,6 +38,14 @@ public class OrderRepositoryTest {
         assertNotNull(order, "Order should not be null. Please get Order from HashMap using orderId");
         assertEquals(1L, order.getId(), "You are getting incorrect order from Hashmap.");
         assertEquals(1000D, order.getTotalAmount(), "You are getting incorrect order from Hashmap.");
+    }
+
+    @Test
+    public void testGetAllOrders() {
+        List<Order> orders = orderRepository.findAll();
+        assertNotNull(orders,"Hashmap contains 2 orders");
+        assertEquals(1L,orders.get(0).getId(),"HashMap contain 2 orders, with Id 1 and 10");
+        assertEquals(10L,orders.get(1).getId(),"HashMap contain 2 orders, with Id 1 and 10");
     }
 
     @Test

@@ -8,5 +8,5 @@ public class OrderController {
     @Autowired
     private IOrderService orderService;
 
-    //Please implement GET Api with path `/order/{orderId}` here
+    //Please implement GET Apis with path `/order/{orderId}` and `/order` here
 }

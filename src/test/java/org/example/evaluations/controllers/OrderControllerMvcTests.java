@@ -12,6 +12,9 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.when;
 
 @WebMvcTest(OrderController.class)
@@ -39,5 +42,25 @@ public class OrderControllerMvcTests {
                 .andExpect(jsonPath("$.id").value(25))
                 .andExpect(jsonPath("$.status").value("INTRANSIT"))
                 .andExpect(jsonPath("$.customerId").value(5000L));
+    }
+
+    @Test
+    public void testGetOrders() throws Exception {
+        // Arrange
+        Order order = new Order();
+        order.setId(2L);
+        order.setStatus(OrderStatus.COMPLETED);
+        order.setCustomerId(1010L);
+        List<Order> orders = new ArrayList<>();
+        orders.add(order);
+
+        when(orderService.getAllOrders()).thenReturn(orders);
+
+        // Act & Assert
+        mockMvc.perform(get("/order"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$[0].id").value(2))
+                .andExpect(jsonPath("$[0].status").value("COMPLETED"))
+                .andExpect(jsonPath("$[0].customerId").value(1010L));
     }
 }
