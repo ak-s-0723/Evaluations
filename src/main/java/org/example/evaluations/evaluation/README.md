@@ -22,10 +22,10 @@ POST API
 
 GET API
  
-        a. You need to add GET API with path "/{id}/installedVersion/{version}" which will return CheckUpdateResponseDto to client.
+        a. You need to add GET API with path "/{id}/installedVersion/{version}" which will return CheckUpdateResponseDto to client. Here datatype of id will be UUID and datatype of version will be String.
         b. You need to get LatestVersion by calling getLatestVersion method of IDeployService.
-        c. If LatestVersion is null, then create an object of CheckUpdateResponseDto with NO_UPDATE status and set version to null in this CheckUpdateResponseDto object.
-        d. If LatestVersion is not null, then create an object of CheckUpdateResponseDto with UPDATE_AVAILABLE status and set version to this LatestVersion in CheckUpdateResponseDto object.
+        c. If LatestVersion is null, then create an object of CheckUpdateResponseDto with AppId previded in request, NO_UPDATE status and set version to null in this CheckUpdateResponseDto object.
+        d. If LatestVersion is not null, then create an object of CheckUpdateResponseDto with AppId previded in request, UPDATE_AVAILABLE status and set version to this LatestVersion in CheckUpdateResponseDto object.
 
 ## Hints
 
