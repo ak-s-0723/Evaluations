@@ -37,7 +37,6 @@ public class UserServiceImpl implements IUserService {
         FakeStoreUserRequestDto fakeStoreUserRequestDtoInput = from(user);
         FakeStoreUserRequestDto fakeStoreUserRequestDtoResponse = requestForEntity("https://fakestoreapi.com/users/{userId}",HttpMethod.PUT, fakeStoreUserRequestDtoInput, FakeStoreUserRequestDto.class,userId).getBody();
         User userResponse = from(fakeStoreUserRequestDtoResponse);
-        userResponse.setId(userId);
         return userResponse;
     }
 

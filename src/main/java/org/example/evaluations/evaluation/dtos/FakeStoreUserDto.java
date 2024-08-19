@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class FakeStoreUserRequestDto {
+public class FakeStoreUserDto {
     private Long id;
     private String email;
     private String password;

@@ -15,15 +15,7 @@ public class UserController {
     @Autowired
     private IUserService userService;
 
-    @PostMapping
-    public User addUser(@RequestBody UserRequestDto userRequestDto) {
-        return userService.add(from(userRequestDto));
-    }
-
-    @PutMapping("/{userId}")
-    public User updateUser(@RequestBody UserRequestDto userRequestDto,@PathVariable Long userId) {
-      return userService.update(from(userRequestDto),userId);
-    }
+    //Add your APIs here.
 
     private User from(UserRequestDto userRequestDto) {
         User user = new User();
@@ -49,20 +41,3 @@ public class UserController {
         return user;
     }
 }
-
-/*
-{
-    "email":"John@gmail.com",
-                    "username":"johnd",
-                    "password":"m38rmF$",
-                    "name":{
-                        "firstname":"John",
-                        "lastname":"Doe"
-                    },
-                    "address":{
-                        "city":"kilcoole",
-                        "street":"7835 new road",
-                        "number":3
-                      }
-}
- */
