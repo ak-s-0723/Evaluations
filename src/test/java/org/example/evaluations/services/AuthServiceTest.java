@@ -10,12 +10,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -62,26 +65,19 @@ public class AuthServiceTest {
     }
 
     @Test
-    void testLogin_NoToken() {
+    void testLogin_HttpClientErrorException() {
         // Arrange
         FakeStoreLoginRequestDto requestDto = new FakeStoreLoginRequestDto();
         requestDto.setUsername("test");
         requestDto.setPassword("password");
 
-        FakeStoreLoginResponseDto responseDto = new FakeStoreLoginResponseDto();
-
-        ResponseEntity<FakeStoreLoginResponseDto> responseEntity = ResponseEntity.ok(responseDto);
-
         when(restTemplate.postForEntity(any(String.class), any(), any(Class.class)))
-                .thenReturn(responseEntity);
-
-        MultiValueMap<String, String> expectedHeaders = new LinkedMultiValueMap<>();
-        // Expecting no SET_COOKIE header
+                .thenThrow(new HttpClientErrorException(HttpStatusCode.valueOf(401)));
 
         // Act
         MultiValueMap<String, String> actualHeaders = authService.login(requestDto);
 
         // Assert
-        assertEquals(expectedHeaders, actualHeaders);
+        assertNull(actualHeaders);
     }
 }

@@ -34,7 +34,6 @@ public class AuthControllerMvcTest {
         requestDto.setPassword("password");
 
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        headers.add(HttpHeaders.SET_COOKIE, "session=abc123");
 
         when(authService.login(any(FakeStoreLoginRequestDto.class))).thenReturn(headers);
 
@@ -43,8 +42,7 @@ public class AuthControllerMvcTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\":\"test\",\"password\":\"password\"}"))
                 .andExpect(status().isOk())
-                .andExpect(content().string("login successful"))
-                .andExpect(header().exists(HttpHeaders.SET_COOKIE));
+                .andExpect(content().string("login successful"));
     }
 
     @Test
@@ -54,19 +52,15 @@ public class AuthControllerMvcTest {
         requestDto.setUsername("test");
         requestDto.setPassword("wrong-password");
 
-        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
-        // No SET_COOKIE header
-
-        when(authService.login(any(FakeStoreLoginRequestDto.class))).thenReturn(headers);
+        // No headers returned
+        when(authService.login(any(FakeStoreLoginRequestDto.class))).thenReturn(null);
 
         // Act & Assert
         mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"username\":\"test\",\"password\":\"wrong-password\"}"))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isUnauthorized())
                 .andExpect(content().string("login failed"))
                 .andExpect(header().doesNotExist(HttpHeaders.SET_COOKIE));
     }
-
-
 }

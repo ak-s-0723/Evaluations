@@ -10,8 +10,8 @@
    "password" : "kev02937@"
    }` and see what type of response you are getting.
 
-2. You need to add implementation in `MultiValueMap<String, String> login(FakeStoreLoginRequestDto fakeStoreLoginRequestDto)` method present inside file `AuthService`. Refer to `FakeStoreLoginRequestDto` and `FakeStoreLoginResponseDto` present inside `dtos` package. Token should be added with key `HttpHeaders.SET_COOKIE` in MultiValueMap and sent to AuthController. Only add token it's non-null.
-3. You need to add an API with route `/login` in `AuthController` which will take Body in form of `FakeStoreLoginRequestDto` and return `ResponseEntity<String>` to client. If Headers which you received from AuthService doesn't contain `token`, then put content as `login failed` with status `BAD REQUEST` and null headers otherwise `login successful` with status `OK` in ResponseEntity.
+2. You need to add implementation in `MultiValueMap<String, String> login(FakeStoreLoginRequestDto fakeStoreLoginRequestDto)` method present inside file `AuthService`. Refer to `FakeStoreLoginRequestDto` and `FakeStoreLoginResponseDto` present inside `dtos` package. In case username and password are correct, you will get Token, Add that token with key `HttpHeaders.SET_COOKIE` in MultiValueMap and send to AuthController. In case username or password is incorrect, RestTemplate will throw `HttpClientErrorException`. In case of HttpClientErrorException, return null from this method.
+3. You need to add an API with route `/login` in `AuthController` which will take Body in form of `FakeStoreLoginRequestDto` and return `ResponseEntity<String>` to client. If AuthService returns null, then put content as `login failed` with status `UNAUTHORIZED` and null headers , otherwise content `login successful` with status `OK` along with headers in ResponseEntity.
 4. You don't need to change anything in `dtos` and interface `IAuthService`. Don't change Dependencies injected in class as well.
 
 
