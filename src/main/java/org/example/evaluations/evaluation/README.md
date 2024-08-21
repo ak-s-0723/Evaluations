@@ -22,7 +22,9 @@
   - In `getStockNews` , you need to make request at endpoint `https://real-time-finance-data.p.rapidapi.com/stock-news?symbol={symbol}`
   - In `getCompanyCashFlow` you need to make request at endpoint `https://real-time-finance-data.p.rapidapi.com/company-cash-flow?symbol={symbol}`
   - In `getCurrencyNews` you need to make request at endpoint `https://real-time-finance-data.p.rapidapi.com/currency-news?from_symbol={currency1}&to_symbol={currency2}`
+  - Carefully Observe `dtos` and `models`. Classes are already given in which you will receive response from RapidAPI for each endpoint. No need to change anything in `models and dtos`.
   - (HINT) Please use RestTemplate's `exchange` method as you need to pass `X-RapidAPI-Key` in HttpHeaders and create HttpEntity through these HttpHeaders and pass this HttpEntity into exchange method.
+
 
 ## Hints
 1. You don't need to create any new file.
