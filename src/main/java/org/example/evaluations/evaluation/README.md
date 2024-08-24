@@ -1,6 +1,7 @@
 # Delete Products Based On Multiple Criterias
 
 ## Requirement
+H2 is already been integrated with this project. So you need not to do anything else for DB Integration except adding `ProductRepo` Repository.
 
 You are provided with 2 Entities `Product` and `Category`. Both of them are related to each other.
 
