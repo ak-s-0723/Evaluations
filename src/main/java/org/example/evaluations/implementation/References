@@ -1,0 +1,9 @@
+https://www.baeldung.com/spring-data-jpa-delete
+
+https://www.baeldung.com/spring-data-jpa-modifying-annotation
+
+https://www.baeldung.com/spring-boot-h2-database#:~:text=Accessing%20the%20H2%20Console&text=By%20default%2C%20the%20H2%20console%20is%20not%20enabled%20in%20Spring.&text=Then%2C%20after%20starting%20the%20application,us%20with%20a%20login%20page.&text=The%20web%20console%20has%20an,feature%20that%20suggests%20SQL%20keywords
+
+https://github.com/eugenp/tutorials/tree/master/persistence-modules/spring-boot-persistence-h2
+
+https://www.baeldung.com/hibernate-unsaved-transient-instance-error
