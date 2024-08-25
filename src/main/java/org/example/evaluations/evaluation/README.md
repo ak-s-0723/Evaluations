@@ -4,7 +4,7 @@
 
 You are given 3 class in `models` package - `WhatsappGroup`, `Message` and `Member`
 
-Your task is to `define relations` between all these classes  and make sure `tables are created` for these models.
+Your task is to `define relations` between all these classes  and make sure `tables are created` for these models and `mapping tables` wherever applicable.
 
 Fields have been already added in each class. `You need not to add any new field` . You just need to anotate those fields with relevant Cardinalities like @ManyToOne, @OneToOne etc...
 
@@ -12,7 +12,9 @@ In case, mapping table is needed between any 2 classes, Then Naming Convention f
 
 Let's say we have 2 classes `user` and `role` and mapping table need to be created for their relation, so name of mapping table will be like `users_roles` and name of foreign keys be `user_id` , `role_id`. 
 
-`Connect 2 or more words with _`
+`Connect 2 or more words with _ and only mapping table name has words in plural, not other tables`
+
+`** Above given is just example for your reference, please don't create classes with name user, role **`
 
 We have testcases defined which will check for which all tables are created with what names and what columns, so please follow naming convention rules seriously.
 
