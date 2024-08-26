@@ -17,7 +17,7 @@ You can also check which tables with what fields are created in H2 by running Ap
  - Saved Settings: `Generic H2(Embedded)`
  - Setting Name: `Generic H2(Embedded)`
  - Driver Class: `org.h2.Driver`
- - JDBC URL: `jdbc:h2:mem:class8_ques2`
+ - JDBC URL: `jdbc:h2:mem:class8_ques3`
  - User Name: `sa`
  - Password: `password`
  - click Connect
