@@ -18,6 +18,17 @@ Let's say we have 2 classes `user` and `role` and mapping table need to be creat
 
 We have testcases defined which will check for which all tables are created with what names and what columns, so please follow naming convention rules seriously.
 
+Note ->
+
+You can also check which tables with what fields are created in H2 by running Application in IntellIJ and opening  `http://localhost:8080/h2-console` on browser and put values as below
+- Saved Settings: `Generic H2(Embedded)`
+- Setting Name: `Generic H2(Embedded)`
+- Driver Class: `org.h2.Driver`
+- JDBC URL: `jdbc:h2:mem:class8_ques4`
+- User Name: `sa`
+- Password: `password`
+- click Connect
+
 ## Hints
 
 - Nothing is needed from your side in pom.xml or application.properties
