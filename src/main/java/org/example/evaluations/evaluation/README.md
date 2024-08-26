@@ -12,13 +12,13 @@ Fields have been already added in each class. `You need not to add any new field
 Note ->
 
 You can also check which tables with what fields are created in H2 by running Application in IntellIJ and opening  `http://localhost:8080/h2-console` on browser and put values as below
-Saved Settings: `Generic H2(Embedded)`
-Setting Name: `Generic H2(Embedded)`
-Driver Class: `org.h2.Driver`
-JDBC URL: `jdbc:h2:mem:class8_ques2`
-User Name: `sa`
-Password: `password`
-and click Connect
+ - Saved Settings: `Generic H2(Embedded)`
+ - Setting Name: `Generic H2(Embedded)`
+ - Driver Class: `org.h2.Driver`
+ - JDBC URL: `jdbc:h2:mem:class8_ques2`
+ - User Name: `sa`
+ - Password: `password`
+ - click Connect
 
 
 ## Hints
