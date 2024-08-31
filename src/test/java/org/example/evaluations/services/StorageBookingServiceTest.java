@@ -47,8 +47,8 @@ public class StorageBookingServiceTest {
 
         BookingResponseDto responseDto = storageBookingService.getBooking(1L);
 
-        assertNotNull(responseDto);
-        assertEquals(1L,responseDto.getBookingId());
+        assertNotNull(responseDto, "Booking with Id 1 should not be null");
+        assertEquals(1L,responseDto.getBookingId(),"One Booking with Id 1 should be there");
         verify(bookingRepo, times(1)).findById(anyLong());
     }
 
@@ -66,9 +66,9 @@ public class StorageBookingServiceTest {
 
         List<BookingResponseDto> responseDtos = storageBookingService.getAllBookingsPerGuest("test@example.com");
 
-        assertNotNull(responseDtos);
-        assertEquals(1, responseDtos.size());
-        assertEquals(1L,responseDtos.get(0).getBookingId());
+        assertNotNull(responseDtos, "Bookings for guest should  be non-null");
+        assertEquals(1, responseDtos.size(),"One Booking should be found");
+        assertEquals(1L,responseDtos.get(0).getBookingId(),"One Booking with Id 1 should be there");
         verify(guestRepo, times(1)).findByEmail(anyString());
         verify(bookingRepo, times(1)).findBookingsByGuest(any(Guest.class));
     }
@@ -87,13 +87,12 @@ public class StorageBookingServiceTest {
 
         BookingResponseDto responseDto = storageBookingService.replaceBooking(1L, bookingRequest);
 
-        assertNotNull(responseDto);
-        assertNotNull(responseDto);
-        assertNotNull(responseDto.getGuest().getName());
-        assertNotNull(responseDto.getCheckInDate());
-        assertNotNull(responseDto.getCheckOutDate());
-        assertNotNull(responseDto.getTotalBill());
-        assertNotNull(responseDto.getRooms());
+        assertNotNull(responseDto,"Found one booking with id 1, so this will be deleted and a new BookingResponse will be sent by ReplaceBooking method");
+        assertNotNull(responseDto.getGuest().getName(),"Guest Name will be non-null in Newly Created Booking");
+        assertNotNull(responseDto.getCheckInDate(),"CheckIn Date will be non-null in Newly Created Booking");
+        assertNotNull(responseDto.getCheckOutDate(),"CheckOut Date will be non-null in Newly Created Booking");
+        assertNotNull(responseDto.getTotalBill(),"Total Bill will be non-null in Newly Created Booking");
+        assertNotNull(responseDto.getRooms(),"Room Info will be non-null in Newly Created Booking");
         assertEquals(1,responseDto.getRooms().size());
         assertEquals(RoomType.DELUXE,responseDto.getRooms().get(0).getRoomType());
         assertEquals("guest2",responseDto.getGuest().getEmail());
@@ -105,7 +104,7 @@ public class StorageBookingServiceTest {
     }
 
     @Test
-    public void testCreateBooking() {
+    public void testReplaceNonExistingBooking() {
         RoomRequestDto roomRequestDto = new RoomRequestDto();
         roomRequestDto.setRoomCount(2);
         roomRequestDto.setRoomType(RoomType.DELUXE);
@@ -113,17 +112,41 @@ public class StorageBookingServiceTest {
         rooms.add(roomRequestDto);
         BookingRequestDto bookingRequest = new BookingRequestDto("guest2","guest2",rooms,"2024-10-10","2024-10-15");
 
+        when(bookingRepo.findById(anyLong())).thenReturn(Optional.empty());
+
+        BookingResponseDto responseDto = storageBookingService.replaceBooking(1L, bookingRequest);
+
+        assertNull(responseDto,"Since no booking with Id 1 found, so no new Booking will be created.");
+
+        verify(bookingRepo, times(1)).findById(anyLong());
+        verify(bookingRepo, times(0)).deleteById(anyLong());
+        verify(bookingRepo, times(0)).save(any(Booking.class));
+        verify(roomRepo, times(0)).save(any(Room.class));
+    }
+
+    @Test
+    public void testCreateBooking() {
+        RoomRequestDto roomRequestDto = new RoomRequestDto();
+        roomRequestDto.setRoomCount(2);
+        roomRequestDto.setRoomType(RoomType.DELUXE);
+        List<RoomRequestDto> rooms = new ArrayList<>();
+        rooms.add(roomRequestDto);
+        BookingRequestDto bookingRequest = new BookingRequestDto("guest2","guest2",rooms,"2024-10-10","2024-10-10");
+
         when(bookingRepo.save(any(Booking.class))).thenReturn(new Booking());
         when(roomRepo.save(any(Room.class))).thenReturn(new Room());
 
         BookingResponseDto responseDto = storageBookingService.createBooking(bookingRequest);
 
-        assertNotNull(responseDto);
-        assertNotNull(responseDto.getGuest().getName());
-        assertNotNull(responseDto.getCheckInDate());
-        assertNotNull(responseDto.getCheckOutDate());
-        assertNotNull(responseDto.getTotalBill());
-        assertNotNull(responseDto.getRooms());
+        assertNotNull(responseDto, "Response of CreateBooking will be non-null.");
+        assertEquals(2000D,responseDto.getTotalBill(),"Please consider stay duration as 1 day in case checkin and checkout are on same day.");
+        assertNotNull(responseDto.getGuest().getName(),"Guest Name will be non-null in Newly Created Booking");
+        assertNotNull(responseDto.getCheckInDate(),"CheckIn Date will be non-null in Newly Created Booking");
+        assertNotNull(responseDto.getCheckOutDate(),"CheckOut Date will be non-null in Newly Created Booking");
+        assertNotNull(responseDto.getTotalBill(),"Total Bill will be non-null in Newly Created Booking");
+        assertNotNull(responseDto.getRooms(),"Room Info will be non-null in Newly Created Booking");
+
+
         assertEquals(1,responseDto.getRooms().size());
         assertEquals(RoomType.DELUXE,responseDto.getRooms().get(0).getRoomType());
         assertEquals("guest2",responseDto.getGuest().getEmail());
@@ -145,7 +168,7 @@ public class StorageBookingServiceTest {
     }
 
     @Test
-    public void testDeleteNonExistentBooking() {
+    public void testDeleteNonExistingBooking() {
         when(bookingRepo.findById(anyLong())).thenReturn(Optional.empty());
 
         Boolean result = storageBookingService.deleteBooking(1L);

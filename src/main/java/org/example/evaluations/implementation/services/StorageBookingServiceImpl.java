@@ -55,13 +55,8 @@ public class StorageBookingServiceImpl implements IBookingService {
 
     @Override
     public BookingResponseDto replaceBooking(Long bookingId, BookingRequestDto bookingRequestDto) {
-        Optional<Booking_> optionalBooking = bookingRepo.findById(bookingId);
-        if(optionalBooking.isEmpty()) {
-            return null;
-        }
-
-        deleteBooking(bookingId);
-        return createBooking(bookingRequestDto);
+        if(deleteBooking(bookingId)) return createBooking(bookingRequestDto);
+        return null;
     }
 
     @Override

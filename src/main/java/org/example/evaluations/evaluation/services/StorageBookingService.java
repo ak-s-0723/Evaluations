@@ -51,7 +51,7 @@ public class StorageBookingService implements IBookingService {
 
     @Override
     public Boolean deleteBooking(Long bookingId) {
-       return null;
+        return null;
     }
 
     private BookingResponseDto from(Booking booking) {
