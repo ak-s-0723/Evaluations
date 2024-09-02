@@ -6,16 +6,9 @@ You are provided with Model Classes for different types of Employees.
 
 As you guys are aware that, Instructor and Ta are hired on contract basis normally while SoftwareDeveloper and ProgramManager have more defined need and charter
 
-You need to make sure that Tables are created for all concrete classes and characteristics of Superclass will be used in all inherited classes throughout Hierarchy.
+You need to make sure that Tables are created for all concrete classes and characteristics of Superclass will be present in all inherited classes throughout Hierarchy.
 
-`PermanentEmployee` will contain data for full-time employees other than SoftwareDeveloper and ProgramManager.
-`ContractualEmployee` will contain data for all part-time employees other than Instructor and Ta.
-
-So we want tables for them as well.
-
-Moreover Instructor and Ta will also have fields applicable for all Contractual Employees and SoftwareDeveloper and ProgramManager will also have fields applicable for all PermanentEmployees.
-
-Note - PK for ContractualEmployees will be alias and for PermanentEmployees will be email.
+Note - Primary Key for ContractualEmployees will be alias and for PermanentEmployees will be email.
 
 ## Testing
 
