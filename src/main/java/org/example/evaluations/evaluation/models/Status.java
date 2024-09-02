@@ -1,5 +1,5 @@
 package org.example.evaluations.evaluation.models;
 
-public enum ProductState {
+public enum Status {
     ACTIVE, INACTIVE
 }

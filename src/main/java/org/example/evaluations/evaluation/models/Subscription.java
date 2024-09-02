@@ -1,8 +1,9 @@
 package org.example.evaluations.evaluation.models;
 
-public class Product {
+public class Subscription {
     protected Long id;
 
-    protected String name;
+    protected double charges;
+
     protected Status status;
 }
