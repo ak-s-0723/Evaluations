@@ -5,8 +5,6 @@ import org.example.evaluations.evaluation.repos.EmployeeRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class EmployeeService {
 
@@ -14,7 +12,6 @@ public class EmployeeService {
     private EmployeeRepo employeeRepo;
 
     public Employee getEmployeeDetails(Long empId) {
-        Optional<Employee> employeeOptional = employeeRepo.findById(empId);
-        return employeeOptional.get();
+        return null;
     }
 }

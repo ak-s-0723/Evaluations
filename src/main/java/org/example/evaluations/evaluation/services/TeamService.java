@@ -5,7 +5,6 @@ import org.example.evaluations.evaluation.repos.TeamRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -15,7 +14,6 @@ public class TeamService {
     private TeamRepo teamRepo;
 
     public Team getTeamDetails(UUID teamId) {
-        Optional<Team> teamOptional = teamRepo.findById(teamId);
-        return teamOptional.get();
+        return null;
     }
 }
