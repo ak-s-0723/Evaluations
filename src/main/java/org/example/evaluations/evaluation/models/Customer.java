@@ -19,4 +19,6 @@ public class Customer {
     private String password;
 
     private List<Order> orders;
+
+    private Long orderCancellationCount;
 }

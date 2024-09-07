@@ -25,4 +25,6 @@ public class Customer_ {
 
     @OneToMany(mappedBy = "customer",fetch = FetchType.EAGER)
     private List<Order_> orders;
+
+    private Long orderCancellationCount;
 }

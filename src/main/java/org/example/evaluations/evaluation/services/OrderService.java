@@ -1,12 +1,9 @@
 package org.example.evaluations.evaluation.services;
 
-import org.example.evaluations.evaluation.exceptions.ShortInventoryException;
-import org.example.evaluations.evaluation.models.*;
+import org.example.evaluations.evaluation.exceptions.OrderNotFoundException;
 import org.example.evaluations.evaluation.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.*;
 
 @Service
 public class OrderService implements IOrderService {
@@ -17,9 +14,6 @@ public class OrderService implements IOrderService {
     private ItemDetailRepo itemDetailRepo;
 
     @Autowired
-    private ItemRepo itemRepo;
-
-    @Autowired
     private InventoryRepo inventoryRepo;
 
     @Autowired
@@ -28,7 +22,7 @@ public class OrderService implements IOrderService {
     @Autowired
     private OrderStateTimeMappingRepo orderStateTimeMappingRepo;
 
-    public Order createOrder(Map<Long,Long> itemQuantityMap, Long customerId) throws ShortInventoryException {
-        return null;
+    public Boolean cancelOrder(Long orderId) throws OrderNotFoundException {
+       return null;
     }
 }

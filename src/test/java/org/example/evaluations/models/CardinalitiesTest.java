@@ -44,13 +44,13 @@ public class CardinalitiesTest {
 
         Integer count = jdbcTemplate.queryForObject(sql, new Object[]{tableName}, Integer.class);
 
-        Set<String> expectedColumns = Set.of("ID","EMAIL","NAME","PASSWORD");
+        Set<String> expectedColumns = Set.of("ID","EMAIL","NAME","PASSWORD","ORDER_CANCELLATION_COUNT");
 
         boolean columnsAreValid = validateColumns(tableName, expectedColumns);
 
         assertTrue(count != null && count > 0, "Table with name CUSTOMER does not exist !");
 
-        assertTrue(columnsAreValid, "The table CUSTOMER does not contain all expected columns like ID,EMAIL,NAME,PASSWORD");
+        assertTrue(columnsAreValid, "The table CUSTOMER does not contain all expected columns like ID,EMAIL,NAME,PASSWORD,ORDER_CANCELLATION_COUNT");
     }
 
     @Test

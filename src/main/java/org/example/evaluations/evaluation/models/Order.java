@@ -8,6 +8,7 @@ import java.util.List;
 @Setter
 @Getter
 public class Order extends BaseModel {
+
     private Customer customer;
 
     private List<ItemDetail> items;

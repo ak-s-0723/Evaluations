@@ -1,6 +1,6 @@
 package org.example.evaluations.services;
 
-import org.example.evaluations.evaluation.exceptions.ShortInventoryException;
+import org.example.evaluations.evaluation.exceptions.OrderNotFoundException;
 import org.example.evaluations.evaluation.models.*;
 import org.example.evaluations.evaluation.repos.*;
 import org.example.evaluations.evaluation.services.OrderService;
@@ -8,9 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -38,77 +36,80 @@ public class OrderServiceIntegrationTest {
     private OrderStateTimeMappingRepo orderStateTimeMappingRepo;
 
     @Test
-    void testCreateOrderSuccess() throws ShortInventoryException {
+    void testCancelOrderSuccess() throws OrderNotFoundException {
         //Arrange
-        Long customerId = 1L;
-        Long itemId = 1L;
-        Long quantity = 2L;
-
         Customer customer = new Customer();
+        customer.setOrderCancellationCount(3L);
+        Long customerId = 1L;
         customer.setId(customerId);
-        customerRepo.save(customer);
+        Customer persistedCustomer = customerRepo.save(customer);
 
-        Item item = new Item();
-        item.setId(itemId);
-        item.setPrice(10.0);
-        itemRepo.save(item);
+        Order order = new Order();
+        order.setCustomer(persistedCustomer);
+        order.setTotalCost(15000D);
+        Order persistedOrder = orderRepo.save(order);
 
-        Inventory inventory = new Inventory();
-        inventory.setCount(10.0);
-        inventory.setItem(item);
-        Inventory persistedInventory = inventoryRepo.save(inventory);
+        Long quantity1 = 30L;
+        Item item1 = new Item();
+        item1.setPrice(100.0);
+        Item persistedItem1 = itemRepo.save(item1);
 
-        Map<Long, Long> itemQuantityMap = new HashMap<>();
-        itemQuantityMap.put(itemId, quantity);
+        Long quantity2 = 10L;
+        Item item2 = new Item();
+        item2.setPrice(1200.0);
+        Item persistedItem2 = itemRepo.save(item2);
+
+        ItemDetail itemDetail1 = new ItemDetail();
+        itemDetail1.setOrder(persistedOrder);
+        itemDetail1.setItem(persistedItem1);
+        itemDetail1.setQuantity(quantity1);
+        ItemDetail persistedItemDetail1 = itemDetailRepo.save(itemDetail1);
+
+        ItemDetail itemDetail2 = new ItemDetail();
+        itemDetail2.setOrder(persistedOrder);
+        itemDetail2.setItem(persistedItem2);
+        itemDetail2.setQuantity(quantity2);
+        ItemDetail persistedItemDetail2 = itemDetailRepo.save(itemDetail2);
+
+        Inventory inventory1 = new Inventory();
+        inventory1.setCount(100D);
+        inventory1.setItem(persistedItem1);
+        Inventory persistedInventory1 = inventoryRepo.save(inventory1);
+
+        Inventory inventory2 = new Inventory();
+        inventory2.setCount(5D);
+        inventory2.setItem(persistedItem2);
+        Inventory persistedInventory2 = inventoryRepo.save(inventory2);
 
         //Act
-        Order result = orderService.createOrder(itemQuantityMap, customerId);
+        Boolean result = orderService.cancelOrder(persistedOrder.getId());
 
         //Assert
-        assertNotNull(result);
-        assertEquals(1L, result.getId());
-        assertEquals(20.0, result.getTotalCost());
-        assertEquals(1L,result.getCustomer().getId());
-        Inventory finalInventory = inventoryRepo.findById(persistedInventory.getId()).get();
-        assertEquals(8.0,finalInventory.getCount());
-        Optional<OrderStateTimeMapping> orderStateTimeMapping = orderStateTimeMappingRepo.findByOrder(result);
-        assertTrue(orderStateTimeMapping.isPresent());
-        assertEquals(OrderState.CONFIRMED,orderStateTimeMapping.get().getOrderState());
-        Optional<ItemDetail> itemDetail = itemDetailRepo.findByOrder(result);
-        assertTrue(itemDetail.isPresent());
-        assertEquals(1L,itemDetail.get().getItem().getId());
-        assertEquals(2L,itemDetail.get().getQuantity());
-        Optional<Order> order = orderRepo.findById(result.getId());
-        assertTrue(order.isPresent());
+        assertTrue(result);
+
+        Inventory finalInventory1 = inventoryRepo.findById(persistedInventory1.getId()).get();
+        assertEquals(130.0,finalInventory1.getCount());
+
+        Inventory finalInventory2 = inventoryRepo.findById(persistedInventory2.getId()).get();
+        assertEquals(15.0,finalInventory2.getCount());
+
+        List<ItemDetail> itemDetailList = itemDetailRepo.findByOrder(persistedOrder);
+        assertTrue(itemDetailList.isEmpty());
+
+
+        List<OrderStateTimeMapping> orderStateTimeMappings = orderStateTimeMappingRepo.findByOrder(persistedOrder);
+        assertFalse(orderStateTimeMappings.isEmpty());
+        assertEquals(OrderState.CANCELLED,orderStateTimeMappings.get(0).getOrderState());
+
+        Customer customer1 = customerRepo.findById(persistedCustomer.getId()).get();
+        assertEquals(4L,customer1.getOrderCancellationCount());
     }
 
     @Test
-    void testCreateOrderThrowsShortInventoryException() throws ShortInventoryException {
-        //Arrange
-        Long customerId = 2L;
-        Long itemId = 2L;
-        Long quantity = 2L;
-
-        Customer customer = new Customer();
-        customer.setId(customerId);
-        customerRepo.save(customer);
-
-        Item item = new Item();
-        item.setId(itemId);
-        item.setPrice(10.0);
-        itemRepo.save(item);
-
-        Inventory inventory = new Inventory();
-        inventory.setCount(1.0);
-        inventory.setItem(item);
-        inventoryRepo.save(inventory);
-
-        Map<Long, Long> itemQuantityMap = new HashMap<>();
-        itemQuantityMap.put(itemId, quantity);
-
+    void testCancelOrderThrowsOrderNotFoundException() throws OrderNotFoundException {
         //Act and Assert
-        assertThrows(ShortInventoryException.class, () -> {
-            orderService.createOrder(itemQuantityMap, customerId);
+        assertThrows(OrderNotFoundException.class, () -> {
+            orderService.cancelOrder(2L);
         });
     }
 }

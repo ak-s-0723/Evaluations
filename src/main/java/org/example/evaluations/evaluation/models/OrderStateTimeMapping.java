@@ -9,7 +9,7 @@ import java.util.Date;
 @Getter
 public class OrderStateTimeMapping extends BaseModel {
 
-    private OrderState orderState = OrderState.CONFIRMED;
+    private OrderState orderState;
 
     private Date date = new Date();
 

@@ -1,8 +1,7 @@
 package org.example.evaluations.implementation.controllers;
 
-import org.example.evaluations.implementation.dtos.CreateOrderRequestDto_;
-import org.example.evaluations.implementation.exceptions.ShortInventoryException_;
-import org.example.evaluations.implementation.models.Order_;
+import org.example.evaluations.implementation.dtos.CancelOrderRequestDto_;
+import org.example.evaluations.implementation.exceptions.OrderNotFoundException_;
 import org.example.evaluations.implementation.services.IOrderService_;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,17 +15,17 @@ public class OrderController_ {
     @Autowired
     private IOrderService_ orderService;
 
-    @PostMapping
-    public Order_ createOrder(@RequestBody CreateOrderRequestDto_ createOrderRequestDto) throws ShortInventoryException_ {
+    @DeleteMapping
+    public Boolean cancelOrder(@RequestBody CancelOrderRequestDto_ cancelOrderRequestDto) throws  OrderNotFoundException_ {
         try {
-            return orderService.createOrder(createOrderRequestDto.getItemQuantityMap(), createOrderRequestDto.getCustomerId());
-        }catch (ShortInventoryException_ exception) {
-            throw exception;
+            return orderService.cancelOrder(cancelOrderRequestDto.getOrderId());
+        }catch (OrderNotFoundException_ orderNotFoundException) {
+            throw orderNotFoundException;
         }
     }
 
-    @ExceptionHandler(ShortInventoryException_.class)
+    @ExceptionHandler(OrderNotFoundException_.class)
     public ResponseEntity<String> throwExceptions(Exception e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

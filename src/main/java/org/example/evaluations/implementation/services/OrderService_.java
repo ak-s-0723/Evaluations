@@ -1,6 +1,6 @@
 package org.example.evaluations.implementation.services;
 
-import org.example.evaluations.implementation.exceptions.ShortInventoryException_;
+import org.example.evaluations.implementation.exceptions.OrderNotFoundException_;
 import org.example.evaluations.implementation.models.*;
 import org.example.evaluations.implementation.repos.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,38 +28,32 @@ public class OrderService_ implements IOrderService_ {
     @Autowired
     private OrderStateTimeMappingRepo_ orderStateTimeMappingRepo;
 
-    public Order_ createOrder(Map<Long,Long> itemQuantityMap, Long customerId) throws ShortInventoryException_ {
-        Order_ order = new Order_();
-        Order_ persistedOrder = orderRepo.save(order);
+    public Boolean cancelOrder(Long orderId) throws OrderNotFoundException_ {
+        Optional<Order_> orderOptional = orderRepo.findById(orderId);
+        if(orderOptional.isEmpty()) {
+            throw new OrderNotFoundException_("orderId is wrong");
+        }
 
-        Double totalCost = 0D;
-        for(Map.Entry<Long,Long> mapElement : itemQuantityMap.entrySet()) {
-            Long productId = mapElement.getKey();
-            Long quantity = mapElement.getValue();
-            Item_ item = itemRepo.findById(productId).get();
-            ItemDetail_ itemDetail = new ItemDetail_();
-            itemDetail.setItem(item);
-            itemDetail.setQuantity(quantity);
-            itemDetail.setOrder(persistedOrder);
+        Order_ order = orderOptional.get();
+        List<ItemDetail_> itemDetails = itemDetailRepo.findByOrder(order); //itemDetails is not null
+        for(ItemDetail_ itemDetail : itemDetails) {
+            Item_ item = itemDetail.getItem(); //item is not null
             Inventory_ inventory = inventoryRepo.findByItem(item).get();
             Double count = inventory.getCount();
-            if(count < quantity) {
-                throw new ShortInventoryException_("Ordered Quantity is not Available");
-            }
-            inventory.setCount(count-quantity);
-            totalCost = totalCost + (item.getPrice() * quantity);
+            inventory.setCount(count+itemDetail.getQuantity());
             inventoryRepo.save(inventory);
-            itemDetailRepo.save(itemDetail);
+            itemDetailRepo.deleteById(itemDetail.getId());
         }
 
         OrderStateTimeMapping_ orderStateTimeMapping = new OrderStateTimeMapping_();
-        orderStateTimeMapping.setOrder(persistedOrder);
+        orderStateTimeMapping.setOrderState(OrderState_.CANCELLED);
+        orderStateTimeMapping.setOrder(order);
         orderStateTimeMappingRepo.save(orderStateTimeMapping);
 
-        Customer_ customer = customerRepo.findById(customerId).get();
-        persistedOrder.setCustomer(customer);
-        persistedOrder.setTotalCost(totalCost);
-        persistedOrder = orderRepo.save(persistedOrder);
-        return persistedOrder;
+        Customer_ customer = order.getCustomer();
+        Long cancellationCount = customer.getOrderCancellationCount();
+        customer.setOrderCancellationCount(cancellationCount+1);
+        customerRepo.save(customer);
+        return true;
     }
 }
