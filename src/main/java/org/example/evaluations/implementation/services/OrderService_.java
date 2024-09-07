@@ -17,9 +17,6 @@ public class OrderService_ implements IOrderService_ {
     private ItemDetailRepo_ itemDetailRepo;
 
     @Autowired
-    private ItemRepo_ itemRepo;
-
-    @Autowired
     private InventoryRepo_ inventoryRepo;
 
     @Autowired
