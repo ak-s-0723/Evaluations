@@ -16,7 +16,7 @@ public class Customer_ {
     private String name;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "customers_addresses",joinColumns = @JoinColumn(name = "customer_id"),inverseJoinColumns = @JoinColumn(name="address_id"))
+    @JoinTable(name = "customers_addresses_",joinColumns = @JoinColumn(name = "customer_id"),inverseJoinColumns = @JoinColumn(name="address_id"))
     private List<Address_> addresses;
 
     private String email;
