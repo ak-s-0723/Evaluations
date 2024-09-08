@@ -17,3 +17,4 @@ You need not to do any changes in `dtos` and `config`. Just refer them for bette
  - Nothing is needed from your side in pom.xml or application.properties. Dependency is already added and properties are already set.
  - No new file need to be created.
  - If you will try to run testcases without providing solution, all Testcases will fail.
+ - You can refer to [link](https://razorpay.com/docs/api/payments/payment-links/create-upi/) for help.
