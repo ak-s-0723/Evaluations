@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.when;
 
@@ -31,22 +33,24 @@ public class RazorpayPaymentGatewayClientUnitTest {
     }
 
     @Test
-    void testInitiatePayment() throws RazorpayException {
+    void testCompletePaymentAndOpenCallBack() throws RazorpayException, MalformedURLException {
         // Arrange
         String expectedUrl = "http://short.url";
         JSONObject paymentLinkResponse = new JSONObject();
         paymentLinkResponse.put("short_url",expectedUrl);
 
         PaymentLink paymentLink = new PaymentLink(paymentLinkResponse);
-        when(paymentLinkClient.create(argThat(new JSONObjectMatcher("Payment for services",500.0,"John Doe","john.doe@example.com","1234567890",true,true,true,"Jeevan Bima")))).thenReturn(paymentLink);
+        when(paymentLinkClient.create(argThat(new JSONObjectMatcher("Payment for services",500.0,"John Doe","john.doe@example.com","1234567890",true,true,"Jeevan Bima","OID12121","https://www.scaler.com","get")))).thenReturn(paymentLink);
 
         // Act
-        String result = paymentGatewayClient.initiatePayment(
+        String result = paymentGatewayClient.completePaymentAndOpenCallBack(
                 "John Doe",
                 "1234567890",
                 "john.doe@example.com",
                 500.0,
-                "Payment for services"
+                "Payment for services",
+                "OID12121",
+                new URL("https://www.scaler.com")
         );
 
         // Assert
@@ -56,17 +60,19 @@ public class RazorpayPaymentGatewayClientUnitTest {
     @Test
     void testInitiatePaymentThrowsException() throws RazorpayException {
         // Arrange
-        when(paymentLinkClient.create(argThat(new JSONObjectMatcher("Payment for services",500.0,"John Doe","john.doe@example.com","1234567890",true,true,true,"Jeevan Bima"))))
+        when(paymentLinkClient.create(argThat(new JSONObjectMatcher("Payment for services",500.0,"John Doe","john.doe@example.com","1234567890",true,true,"Jeevan Bima","OID12345","https://www.scaler.com","get"))))
                 .thenThrow(new RazorpayException("Failed to create payment link"));
 
         // Act & Assert
         RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            paymentGatewayClient.initiatePayment(
+            paymentGatewayClient.completePaymentAndOpenCallBack(
                     "John Doe",
                     "1234567890",
                     "john.doe@example.com",
                     500.0,
-                    "Payment for services"
+                    "Payment for services",
+                    "OID12345",
+                    new URL("https://www.scaler.com")
             );
         });
 
