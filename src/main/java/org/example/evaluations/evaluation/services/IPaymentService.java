@@ -1,5 +1,8 @@
 package org.example.evaluations.evaluation.services;
 
+import com.razorpay.Subscription;
+import org.example.evaluations.evaluation.dtos.CreateSubscriptionRequest;
+
 public interface IPaymentService {
-    String initiatePayment(String name, String phoneNumber, String email,Double amount,String description);
+    Subscription createSubscription(CreateSubscriptionRequest subscriptionRequest);
 }

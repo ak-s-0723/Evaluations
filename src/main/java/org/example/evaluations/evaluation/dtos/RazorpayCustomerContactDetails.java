@@ -5,10 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class InitiatePaymentRequestDto {
-    String name;
+public class RazorpayCustomerContactDetails {
     String phoneNumber;
     String email;
-    Double amount;
-    String description;
 }
