@@ -2,6 +2,9 @@ package org.example.evaluations.clients;
 
 import com.razorpay.*;
 import org.example.evaluations.evaluation.clients.RazorpayPaymentGatewayClient;
+import org.example.evaluations.evaluation.dtos.RazorpayCustomerContactDetails;
+import org.example.evaluations.evaluation.dtos.RazorpayPlanRequest;
+import org.example.evaluations.evaluation.dtos.RazorpaySubscriptionRequest;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,56 +23,118 @@ public class RazorpayPaymentGatewayClientUnitTest {
     private RazorpayClient razorpayClient;
 
     @MockBean
-    private PaymentLinkClient paymentLinkClient;
+    private PlanClient planClient;
+
+    @MockBean
+    private SubscriptionClient subscriptionClient;
 
     @Autowired
     private RazorpayPaymentGatewayClient paymentGatewayClient;
 
     @BeforeEach
     public void setup() {
-        razorpayClient.paymentLink = paymentLinkClient;
+        razorpayClient.plans = planClient;
+        razorpayClient.subscriptions = subscriptionClient;
     }
 
     @Test
-    void testInitiatePayment() throws RazorpayException {
+    void testCreateSubscriptionLink_Success() throws RazorpayException {
         // Arrange
-        String expectedUrl = "http://short.url";
-        JSONObject paymentLinkResponse = new JSONObject();
-        paymentLinkResponse.put("short_url",expectedUrl);
+        RazorpayCustomerContactDetails contactDetails = new RazorpayCustomerContactDetails();
+        contactDetails.setPhoneNumber("1234567890");
+        contactDetails.setEmail("test@example.com");
 
-        PaymentLink paymentLink = new PaymentLink(paymentLinkResponse);
-        when(paymentLinkClient.create(argThat(new JSONObjectMatcher("Payment for services",500.0,"John Doe","john.doe@example.com","1234567890",true,true,true,"Jeevan Bima")))).thenReturn(paymentLink);
+        RazorpayPlanRequest planRequest = new RazorpayPlanRequest();
+        planRequest.setFrequency("monthly");
+        planRequest.setName("Gold Plan");
+        planRequest.setDescription("Premium subscription");
+        planRequest.setAmount(99.99);
+
+        RazorpaySubscriptionRequest subscriptionRequest = new RazorpaySubscriptionRequest();
+        subscriptionRequest.setRazorpayPlanRequest(planRequest);
+        subscriptionRequest.setTotalCount(12L);
+        subscriptionRequest.setQuantity(5L);
+        subscriptionRequest.setStartTime(1L);
+        subscriptionRequest.setExpiryTime(12L);
+        subscriptionRequest.setRazorpayCustomerContactDetails(contactDetails);
+
+        JSONObject planJsonObject = new JSONObject();
+        planJsonObject.put("id","planid_234qerw");
+        Plan plan = new Plan(planJsonObject);
+        when(planClient.create(argThat(new PlanJsonObjectMatcher("Gold Plan",99.99,"INR","Premium subscription")))).thenReturn(plan);
+
+
+        String expectedUrl = "https://rzp.io/i/m0y0f";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("short_url",expectedUrl);
+        Subscription subscription = new Subscription(jsonObject);
+        when(subscriptionClient.create(argThat(new SubscriptionJsonObjectMatcher(12L,5L,1L,12L,"1234567890","test@example.com","planid_234qerw","offer_JTUADI4ZWBGWur")))).thenReturn(subscription);
 
         // Act
-        String result = paymentGatewayClient.initiatePayment(
-                "John Doe",
-                "1234567890",
-                "john.doe@example.com",
-                500.0,
-                "Payment for services"
-        );
+        Subscription response = paymentGatewayClient.createSubscriptionLink(subscriptionRequest);
 
         // Assert
-        assertEquals(expectedUrl, result, "The returned URL should match the expected URL");
+        assertEquals(expectedUrl, response.get("short_url").toString(), "The returned URL should match the expected URL");
     }
 
     @Test
-    void testInitiatePaymentThrowsException() throws RazorpayException {
-        // Arrange
-        when(paymentLinkClient.create(argThat(new JSONObjectMatcher("Payment for services",500.0,"John Doe","john.doe@example.com","1234567890",true,true,true,"Jeevan Bima"))))
-                .thenThrow(new RazorpayException("Failed to create payment link"));
+    void testCreateSubscriptionLink_CreatePlanThrowsException() throws RazorpayException {
+
+        RazorpayPlanRequest planRequest = new RazorpayPlanRequest();
+        planRequest.setFrequency("monthly");
+        planRequest.setName("Gold Plan");
+        planRequest.setDescription("Premium subscription");
+        planRequest.setAmount(99.99);
+        RazorpaySubscriptionRequest subscriptionRequest = new RazorpaySubscriptionRequest();
+        subscriptionRequest.setRazorpayPlanRequest(planRequest);
+
+        when(planClient.create(argThat(new PlanJsonObjectMatcher("Gold Plan",99.99,"INR","Premium subscription"))))
+                .thenThrow(new RazorpayException("Failed to create plan"));
 
         // Act & Assert
         RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            paymentGatewayClient.initiatePayment(
-                    "John Doe",
-                    "1234567890",
-                    "john.doe@example.com",
-                    500.0,
-                    "Payment for services"
+            paymentGatewayClient.createSubscriptionLink(subscriptionRequest
             );
         });
 
-        assertEquals("Failed to create payment link", thrown.getMessage(), "Exception message should match");
+        assertEquals("Failed to create plan", thrown.getMessage(), "Exception message should match");
+    }
+
+    @Test
+    void testCreateSubscriptionLink_CreateSubscriptionLinkThrowsException() throws RazorpayException {
+        // Arrange
+        RazorpayCustomerContactDetails contactDetails = new RazorpayCustomerContactDetails();
+        contactDetails.setPhoneNumber("1234567890");
+        contactDetails.setEmail("test@example.com");
+
+        RazorpayPlanRequest planRequest = new RazorpayPlanRequest();
+        planRequest.setFrequency("monthly");
+        planRequest.setName("Gold Plan");
+        planRequest.setDescription("Premium subscription");
+        planRequest.setAmount(99.99);
+
+        RazorpaySubscriptionRequest subscriptionRequest = new RazorpaySubscriptionRequest();
+        subscriptionRequest.setRazorpayPlanRequest(planRequest);
+        subscriptionRequest.setTotalCount(12L);
+        subscriptionRequest.setQuantity(5L);
+        subscriptionRequest.setStartTime(1L);
+        subscriptionRequest.setExpiryTime(12L);
+        subscriptionRequest.setRazorpayCustomerContactDetails(contactDetails);
+
+        JSONObject planJsonObject = new JSONObject();
+        planJsonObject.put("id","planid_234qerw");
+        Plan plan = new Plan(planJsonObject);
+        when(planClient.create(argThat(new PlanJsonObjectMatcher("Gold Plan",99.99,"INR","Premium subscription")))).thenReturn(plan);
+
+        when(subscriptionClient.create(argThat(new SubscriptionJsonObjectMatcher(12L,5L,1L,12L,"1234567890","test@example.com","planid_234qerw","offer_JTUADI4ZWBGWur"))))
+                .thenThrow(new RazorpayException("Failed to create subscription link"));
+
+        // Act & Assert
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
+            paymentGatewayClient.createSubscriptionLink(subscriptionRequest
+            );
+        });
+
+        assertEquals("Failed to create subscription link", thrown.getMessage(), "Exception message should match");
     }
 }
