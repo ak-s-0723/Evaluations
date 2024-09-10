@@ -1,75 +1,101 @@
 package org.example.evaluations.clients;
 
-import com.razorpay.*;
 import org.example.evaluations.evaluation.clients.RazorpayPaymentGatewayClient;
+import org.example.evaluations.evaluation.dtos.PayoutPurpose;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.argThat;
+import java.util.Base64;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class RazorpayPaymentGatewayClientUnitTest {
-    @MockBean
-    private RazorpayClient razorpayClient;
 
     @MockBean
-    private PaymentLinkClient paymentLinkClient;
+    private RestTemplateBuilder restTemplateBuilder;
+
+    @MockBean
+    private RestTemplate restTemplate;
 
     @Autowired
-    private RazorpayPaymentGatewayClient paymentGatewayClient;
+    private RazorpayPaymentGatewayClient razorpayPaymentGatewayClient;
 
     @BeforeEach
-    public void setup() {
-        razorpayClient.paymentLink = paymentLinkClient;
+    void setUp() {
+        when(restTemplateBuilder.build()).thenReturn(restTemplate);
     }
 
+
     @Test
-    void testInitiatePayment() throws RazorpayException {
-        // Arrange
-        String expectedUrl = "http://short.url";
-        JSONObject paymentLinkResponse = new JSONObject();
-        paymentLinkResponse.put("short_url",expectedUrl);
+    void testCreatePayoutToBankAccount() {
+        String accountNumber = "7878780080316316";
+        Double amount = 1000000.0;
+        String purpose = "refund";
+        String referenceId = "Acme Transaction ID 12345";
+        String narration = "Acme Corp Fund Transfer";
+        String expectedResponse = "{\"status\":\"success\"}";
 
-        PaymentLink paymentLink = new PaymentLink(paymentLinkResponse);
-        when(paymentLinkClient.create(argThat(new JSONObjectMatcher("Payment for services",500.0,"John Doe","john.doe@example.com","1234567890",true,true,true,"Jeevan Bima")))).thenReturn(paymentLink);
+        ResponseEntity<String> responseEntity = ResponseEntity.ok(expectedResponse);
 
-        // Act
-        String result = paymentGatewayClient.initiatePayment(
-                "John Doe",
-                "1234567890",
-                "john.doe@example.com",
-                500.0,
-                "Payment for services"
+        when(restTemplate.exchange(eq("https://api.razorpay.com/v1/payouts"), eq(HttpMethod.POST), any(HttpEntity.class), eq(String.class)))
+                .thenReturn(responseEntity);
+
+        // When
+        String response = razorpayPaymentGatewayClient.createPayoutToBankAccount(accountNumber, amount, PayoutPurpose.valueOf(purpose), referenceId, narration);
+
+        // Then
+        assertNotNull(response);
+        assertEquals(expectedResponse, response);
+
+        verify(restTemplate).exchange(
+                eq("https://api.razorpay.com/v1/payouts"),
+                eq(HttpMethod.POST),
+                argThat(argument -> {
+                    HttpHeaders headers1 = argument.getHeaders();
+                    String autho = headers1.getFirst("Authorization");
+                    String contentType = headers1.getFirst("Content-Type");
+                    String idempotency = headers1.getFirst("X-Payout-Idempotency");
+
+                    return autho != null &&
+                            contentType != null &&
+                            contentType.equals("application/json") &&
+                            idempotency != null &&
+                            autho.startsWith("Basic ") &&
+                            autho.endsWith(Base64.getEncoder().encodeToString("razorpayId:razorpaySecret".getBytes())) &&
+                            argument.getBody() != null &&
+                            validateBody((String) argument.getBody(),accountNumber,amount,referenceId,narration);
+                }),
+                eq(String.class)
         );
-
-        // Assert
-        assertEquals(expectedUrl, result, "The returned URL should match the expected URL");
     }
 
-    @Test
-    void testInitiatePaymentThrowsException() throws RazorpayException {
-        // Arrange
-        when(paymentLinkClient.create(argThat(new JSONObjectMatcher("Payment for services",500.0,"John Doe","john.doe@example.com","1234567890",true,true,true,"Jeevan Bima"))))
-                .thenThrow(new RazorpayException("Failed to create payment link"));
-
-        // Act & Assert
-        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
-            paymentGatewayClient.initiatePayment(
-                    "John Doe",
-                    "1234567890",
-                    "john.doe@example.com",
-                    500.0,
-                    "Payment for services"
-            );
-        });
-
-        assertEquals("Failed to create payment link", thrown.getMessage(), "Exception message should match");
+    private boolean validateBody(String body, String accountNumber, Double amount, String referenceId, String narration) {
+        try {
+            JSONObject json = new JSONObject(body);
+            return json.getString("account_number").equals(accountNumber) &&
+                    json.getDouble("amount")==(amount) &&
+                    json.getString("reference_id").equals(referenceId) &&
+                    json.getString("fund_account_id").equals("fa_00000000000001") &&
+                    json.getString("currency").equals("INR") &&
+                    json.getString("mode").equals("IMPS") &&
+                    json.getBoolean("queue_if_low_balance") &&
+                    json.getString("narration").equals(narration);
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

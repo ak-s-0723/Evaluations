@@ -1,45 +1,55 @@
 package org.example.evaluations.implementation.clients;
 
-import com.razorpay.PaymentLink;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
+import org.example.evaluations.implementation.dtos.PayoutPurpose_;
 import org.json.JSONObject;
-import com.razorpay.RazorpayClient;
-import com.razorpay.RazorpayException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.http.*;
+import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.UUID;
+
 
 @Component
 public class RazorpayPaymentGatewayClient_ {
 
-    @Autowired
-    private RazorpayClient razorpayClient;
+    @Value("${razorpay.id}")
+    private String razorpayKeyId;
 
-    public String initiatePayment(String name, String phoneNumber, String email,Double amount,String description) {
-        try {
-            JSONObject paymentLinkRequest = new JSONObject();
-            paymentLinkRequest.put("upi_link", true);
-            paymentLinkRequest.put("amount", amount);
-            paymentLinkRequest.put("currency", "INR");
-            paymentLinkRequest.put("accept_partial", false);
-            paymentLinkRequest.put("first_min_partial_amount", 100);
-            paymentLinkRequest.put("description", description);
-            JSONObject customer = new JSONObject();
-            customer.put("name", phoneNumber);
-            customer.put("contact", name);
-            customer.put("email", email);
-            paymentLinkRequest.put("customer", customer);
-            JSONObject notify = new JSONObject();
-            notify.put("sms", true);
-            notify.put("email", true);
-            paymentLinkRequest.put("notify", notify);
-            paymentLinkRequest.put("reminder_enable", true);
-            JSONObject notes = new JSONObject();
-            notes.put("policy_name", "Jeevan Bima");
-            paymentLinkRequest.put("notes", notes);
-            PaymentLink paymentLink = razorpayClient.paymentLink.create(paymentLinkRequest);
-            return paymentLink.get("short_url").toString();
-        } catch (RazorpayException exception) {
-            throw new RuntimeException(exception.getMessage());
-        }
+    @Value("${razorpay.secret}")
+    private String razorpayKeySecret;
+
+    private final String path = "https://api.razorpay.com/v1/payouts";
+
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
+    public String createPayoutToBankAccount(String accountNumber, Double amount, PayoutPurpose_ purpose, String referenceId, String narration) {
+            String idempotencyKey = UUID.randomUUID().toString();
+            RestTemplate restTemplate = restTemplateBuilder.build();
+
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("Content-Type", "application/json");
+            headers.set("X-Payout-Idempotency", idempotencyKey);
+            String auth = razorpayKeyId + ":" + razorpayKeySecret;
+            byte[] encodedAuth = java.util.Base64.getEncoder().encode(auth.getBytes());
+            String authHeader = "Basic " + new String(encodedAuth);
+            headers.set("Authorization", authHeader);
+
+            JSONObject payload = new JSONObject();
+            payload.put("account_number", accountNumber);
+            payload.put("fund_account_id", "fa_00000000000001");
+            payload.put("amount", amount);
+            payload.put("currency", "INR");
+            payload.put("mode", "IMPS");
+            payload.put("purpose", purpose.name());
+            payload.put("queue_if_low_balance", true);
+            payload.put("reference_id", referenceId);
+            payload.put("narration", narration);
+
+            HttpEntity<String> request = new HttpEntity<>(payload.toString(), headers);
+            ResponseEntity<String> response = restTemplate.exchange(path, HttpMethod.POST, request, String.class);
+            return response.getBody();
     }
 }
