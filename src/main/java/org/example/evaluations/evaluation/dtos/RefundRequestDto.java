@@ -5,10 +5,8 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class InitiatePaymentRequestDto {
-    String name;
-    String phoneNumber;
-    String email;
+public class RefundRequestDto {
     Double amount;
-    String description;
+    String receipt;
+    RefundSpeed refundSpeed;
 }

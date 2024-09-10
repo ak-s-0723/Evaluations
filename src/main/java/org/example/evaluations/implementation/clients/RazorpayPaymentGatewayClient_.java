@@ -1,12 +1,12 @@
 package org.example.evaluations.implementation.clients;
 
-import com.razorpay.PaymentLink;
+import com.razorpay.RazorpayClient;
+import com.razorpay.RazorpayException;
+import com.razorpay.Refund;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import org.json.JSONObject;
-import com.razorpay.RazorpayClient;
-import com.razorpay.RazorpayException;
 
 @Component
 public class RazorpayPaymentGatewayClient_ {
@@ -14,32 +14,37 @@ public class RazorpayPaymentGatewayClient_ {
     @Autowired
     private RazorpayClient razorpayClient;
 
-    public String initiatePayment(String name, String phoneNumber, String email,Double amount,String description) {
+    private final String paymentId = "pay_39QqoUAi66xm2f"; //use this paymentId, wherever needed
+
+    public String issueInstantRefund(Double amount, String receipt) {
         try {
-            JSONObject paymentLinkRequest = new JSONObject();
-            paymentLinkRequest.put("upi_link", true);
-            paymentLinkRequest.put("amount", amount);
-            paymentLinkRequest.put("currency", "INR");
-            paymentLinkRequest.put("accept_partial", false);
-            paymentLinkRequest.put("first_min_partial_amount", 100);
-            paymentLinkRequest.put("description", description);
-            JSONObject customer = new JSONObject();
-            customer.put("name", phoneNumber);
-            customer.put("contact", name);
-            customer.put("email", email);
-            paymentLinkRequest.put("customer", customer);
-            JSONObject notify = new JSONObject();
-            notify.put("sms", true);
-            notify.put("email", true);
-            paymentLinkRequest.put("notify", notify);
-            paymentLinkRequest.put("reminder_enable", true);
+            JSONObject refundRequest = new JSONObject();
+            refundRequest.put("amount", amount);
+            refundRequest.put("speed", "optimum");
+            refundRequest.put("receipt", receipt);
             JSONObject notes = new JSONObject();
-            notes.put("policy_name", "Jeevan Bima");
-            paymentLinkRequest.put("notes", notes);
-            PaymentLink paymentLink = razorpayClient.paymentLink.create(paymentLinkRequest);
-            return paymentLink.get("short_url").toString();
-        } catch (RazorpayException exception) {
+            notes.put("notes_key_1", "Tea, Earl Grey, Hot");
+            notes.put("notes_key_2", "Tea, Earl Grey… decaf.");
+            refundRequest.put("notes", notes);
+            Refund refund = razorpayClient.payments.refund(paymentId, refundRequest);
+            return refund.get("id").toString();
+        }catch (RazorpayException exception) {
             throw new RuntimeException(exception.getMessage());
+        }
+    }
+
+    public String updateRefund(String refundId,JSONObject jsonObject) {
+        try {
+            JSONObject refundRequest = new JSONObject();
+            JSONObject notes = new JSONObject();
+            notes.put("notes_key_1","Tea, Earl Grey, Hot");
+            notes.put("notes_key_2","Tea, Earl Grey… decaf.");
+            refundRequest.put("notes",notes);
+            refundRequest.put("updated_info",jsonObject);
+            Refund refund = razorpayClient.refunds.edit(refundId,refundRequest);
+            return refund.get("id").toString();
+        }catch (RazorpayException exception) {
+           throw new RuntimeException(exception.getMessage());
         }
     }
 }

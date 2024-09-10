@@ -15,8 +15,9 @@ public class RazorpayConfig_ {
     @Value("${razorpay.secret}")
     private String razorpayKeySecret;
 
-    //@Bean  --> commented to avoid conflict with bean present in evaluation project
-    public RazorpayClient getRazorpayClient() throws RazorpayException {
-        return new RazorpayClient(razorpayKeyId,razorpayKeySecret);
-    }
+//   Don't delete
+//    @Bean
+//    public RazorpayClient getRazorpayClient() throws RazorpayException {
+//        return new RazorpayClient(razorpayKeyId,razorpayKeySecret);
+//    }
 }
