@@ -1,20 +1,19 @@
 package org.example.evaluations.evaluation.services;
 
+import com.stripe.param.PlanCreateParams;
 import org.example.evaluations.evaluation.clients.StripePaymentGateway;
-import org.example.evaluations.evaluation.dtos.SessionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 
 @Service
-public class SessionService implements ISessionService {
+public class SubscriptionService implements ISubscriptionService {
 
     @Autowired
     private StripePaymentGateway stripePaymentGateway;
 
-    public SessionDto createSession(String successUrl, List<Long> amounts, List<String> productNames, List<Long> quantities) {
-        //Add implementation here
+    public String createSubscriptionForProduct(String customerName,String customerEmail,Long productAmount, String productName, PlanCreateParams.Interval interval) {
+        //Add your implementation here
         return null;
     }
 }

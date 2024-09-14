@@ -2,16 +2,11 @@ package org.example.evaluations.implementation.clients;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Price;
-import com.stripe.model.checkout.Session;
-import com.stripe.param.PriceCreateParams;
-import com.stripe.param.checkout.SessionCreateParams;
-import org.example.evaluations.implementation.dtos.SessionDto_;
+import com.stripe.model.*;
+import com.stripe.param.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class StripePaymentGateway_ {
@@ -19,58 +14,62 @@ public class StripePaymentGateway_ {
     @Value("${stripe.key}")
     public String apiKey;
 
-    public SessionDto_ createSession(String successUrl, List<Long> amounts, List<String> productNames, List<Long> quantities) {
-        Stripe.apiKey = apiKey;
+    private final Long trialDays = 730L;
+
+    public String createSubscriptionForProduct(String customerName,String customerEmail,Long productAmount, String productName, PlanCreateParams.Interval interval) {
+        Stripe.apiKey = this.apiKey;
         try {
-            List<Price> prices = new ArrayList<>();
-            for(int i=0; i<productNames.size(); i++) {
-                prices.add(getPrice(amounts.get(i),productNames.get(i)));
-            }
-            List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
-            for(int i=0;i<prices.size();i++) {
-                lineItems.add(SessionCreateParams.LineItem.builder()
-                        .setPrice(prices.get(i).getId())
-                        .setQuantity(quantities.get(i))
-                        .build());
-            }
-            SessionCreateParams params =
-                    SessionCreateParams.builder()
-                            .setSuccessUrl(successUrl)
-                            .addAllLineItem(lineItems)
-                            .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
+            Customer customer = getCustomer(customerName,customerEmail);
+            Plan plan = getPlan(productName, interval, productAmount);
+
+            SubscriptionCreateParams params =
+                    SubscriptionCreateParams.builder()
+                            .setCustomer(customer.getId())
+                            .addItem(
+                                    SubscriptionCreateParams.Item.builder().setPlan(plan.getId())
+                                            .build()
+                            ).setTrialFromPlan(true)
                             .build();
-            Session session = Session.create(params);
-            SessionDto_ sessionDto = new SessionDto_();
-            sessionDto.setId(session.getId());
-            sessionDto.setUrl(session.getUrl());
-            sessionDto.setExpiry(session.getExpiresAt());
-            sessionDto.setTotal(session.getAmountTotal());
-            return sessionDto;
+            Subscription subscription = Subscription.create(params);
+            return subscription.getId();
         }catch (StripeException exception) {
-            throw new RuntimeException(exception);
+            throw new RuntimeException(exception.getMessage());
         }
     }
 
-    private Price getPrice(Long amount, String productName) {
+    private Product getProduct(String productName) {
         try {
-            PriceCreateParams params =
-                    PriceCreateParams.builder()
-                            .setCurrency("usd")
-                            .setUnitAmount(amount)
-                            .setRecurring(
-                                    PriceCreateParams.Recurring.builder()
-                                            .setInterval(PriceCreateParams.Recurring.Interval.MONTH)
-                                            .build()
-                            )
-                            .setProductData(
-                                    PriceCreateParams.ProductData.builder().setName(productName).build()
-                            )
-                            .build();
-
-            Price price = Price.create(params);
-            return price;
+            ProductCreateParams productCreateParams =
+                    ProductCreateParams.builder().setName(productName).build();
+            Product product = Product.create(productCreateParams);
+            return product;
         }catch (StripeException exception) {
-            throw new RuntimeException(exception);
+            throw new RuntimeException(exception.getMessage());
+        }
+    }
+
+    private Plan getPlan(String productName, PlanCreateParams.Interval interval, Long planAmount) {
+        try {
+            PlanCreateParams planCreateParams = PlanCreateParams.builder().setTrialPeriodDays(trialDays).setProduct(getProduct(productName).getId()).setInterval(interval).setAmount(planAmount)
+                    .setCurrency("usd").build();
+            Plan plan = Plan.create(planCreateParams);
+            return  plan;
+        }catch (StripeException exception) {
+            throw new RuntimeException(exception.getMessage());
+        }
+    }
+
+    private Customer getCustomer(String customerName,String customerEmail) {
+        try {
+            CustomerCreateParams params =
+                    CustomerCreateParams.builder()
+                            .setName(customerName)
+                            .setEmail(customerEmail)
+                            .build();
+            Customer customer = Customer.create(params);
+            return customer;
+        } catch (StripeException exception) {
+            throw new RuntimeException(exception.getMessage());
         }
     }
 }

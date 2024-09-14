@@ -1,10 +1,8 @@
 package org.example.evaluations.evaluation.clients;
 
-import org.example.evaluations.evaluation.dtos.SessionDto;
+import com.stripe.param.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 public class StripePaymentGateway {
@@ -12,8 +10,10 @@ public class StripePaymentGateway {
     @Value("${stripe.key}")
     public String apiKey;
 
-    public SessionDto createSession(String successUrl, List<Long> amounts, List<String> productNames, List<Long> quantities) {
-        //Add your implementation here
+    private final Long trialDays = 730L;
+
+    public String createSubscriptionForProduct(String customerName,String customerEmail,Long productAmount, String productName, PlanCreateParams.Interval interval) {
+       //Add your implementation here
         return null;
     }
 }
