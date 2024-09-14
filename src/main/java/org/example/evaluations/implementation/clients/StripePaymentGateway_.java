@@ -2,12 +2,16 @@ package org.example.evaluations.implementation.clients;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.PaymentLink;
 import com.stripe.model.Price;
-import com.stripe.param.PaymentLinkCreateParams;
+import com.stripe.model.checkout.Session;
 import com.stripe.param.PriceCreateParams;
+import com.stripe.param.checkout.SessionCreateParams;
+import org.example.evaluations.implementation.dtos.SessionDto_;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class StripePaymentGateway_ {
@@ -15,34 +19,39 @@ public class StripePaymentGateway_ {
     @Value("${stripe.key}")
     public String apiKey;
 
-    public String getPaymentLink(Long amount, Long quantity, String callbackUrl, String productName) {
+    public SessionDto_ createSession(String successUrl, List<Long> amounts, List<String> productNames, List<Long> quantities) {
+        Stripe.apiKey = apiKey;
         try {
-            Stripe.apiKey = this.apiKey;
-            Price price = getPrice(amount,productName);
-
-            PaymentLinkCreateParams params =
-                    PaymentLinkCreateParams.builder()
-                            .addLineItem(
-                                    PaymentLinkCreateParams.LineItem.builder()
-                                            .setPrice(price.getId())
-                                            .setQuantity(quantity)
-                                            .build()
-                            ).setAfterCompletion(PaymentLinkCreateParams.AfterCompletion.builder()
-                                    .setType(PaymentLinkCreateParams.AfterCompletion.Type.REDIRECT)
-                                    .setRedirect(PaymentLinkCreateParams.AfterCompletion.Redirect.builder()
-                                            .setUrl(callbackUrl)
-                                            .build())
-                                    .build())
+            List<Price> prices = new ArrayList<>();
+            for(int i=0; i<productNames.size(); i++) {
+                prices.add(getPrice(amounts.get(i),productNames.get(i)));
+            }
+            List<SessionCreateParams.LineItem> lineItems = new ArrayList<>();
+            for(int i=0;i<prices.size();i++) {
+                lineItems.add(SessionCreateParams.LineItem.builder()
+                        .setPrice(prices.get(i).getId())
+                        .setQuantity(quantities.get(i))
+                        .build());
+            }
+            SessionCreateParams params =
+                    SessionCreateParams.builder()
+                            .setSuccessUrl(successUrl)
+                            .addAllLineItem(lineItems)
+                            .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
                             .build();
-
-            PaymentLink paymentLink = PaymentLink.create(params);
-            return paymentLink.getUrl();
+            Session session = Session.create(params);
+            SessionDto_ sessionDto = new SessionDto_();
+            sessionDto.setId(session.getId());
+            sessionDto.setUrl(session.getUrl());
+            sessionDto.setExpiry(session.getExpiresAt());
+            sessionDto.setTotal(session.getAmountTotal());
+            return sessionDto;
         }catch (StripeException exception) {
             throw new RuntimeException(exception);
         }
     }
 
-    private Price getPrice(Long amount,String productName) {
+    private Price getPrice(Long amount, String productName) {
         try {
             PriceCreateParams params =
                     PriceCreateParams.builder()

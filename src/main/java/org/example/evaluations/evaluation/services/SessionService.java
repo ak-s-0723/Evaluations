@@ -1,17 +1,20 @@
 package org.example.evaluations.evaluation.services;
 
 import org.example.evaluations.evaluation.clients.StripePaymentGateway;
+import org.example.evaluations.evaluation.dtos.SessionDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-public class PaymentService implements IPaymentService {
+public class SessionService implements ISessionService {
 
     @Autowired
     private StripePaymentGateway stripePaymentGateway;
 
-    public String getPaymentLink(Long amount, Long quantity, String callbackUrl, String productName) {
-        //Add your implementation here
+    public SessionDto createSession(String successUrl, List<Long> amounts, List<String> productNames, List<Long> quantities) {
+        //Add implementation here
         return null;
     }
 }

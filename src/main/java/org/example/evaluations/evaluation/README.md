@@ -1,12 +1,12 @@
-# Get Payment Link and Call callbackUrl once payment is completed using Stripe
+# Create a Stripe Checkout Session
 
 ## Requirements
 
-In PaymentController, you need to implement an API with path `/payment` which will take Body in form of InitializePaymentRequestDto and return PayLink (String). This API will be responsible for initiating Payment.
+In SessionController, you need to implement an API with path `/session` which will take Body in form of CreateSessionDto and return SessionDto. This API will be responsible for creating a CheckoutSession object and returning it.
 
-In PaymentService, you need to complete `String getPaymentLink(Long amount, Long quantity, String callbackUrl, String productName)` method
+In SessionService, you need to complete `SessionDto createSession(String successUrl, List<Long> amounts, List<String> productNames, List<Long> quantities)` method
 
-In StripePaymentGateway, please implement GetPaymentLink Method getting help from [Stripe Official Documentation](https://docs.stripe.com/api/payment-link/create)
+In StripePaymentGateway, please implement createSession Method getting help from [Stripe Official Documentation](https://docs.stripe.com/api/checkout/sessions/create). Please note that you are provided with Lists of ProductNames which need to be ordered in this session along with their amounts and quantities. Ith product will have it's name at Ith index in productNames list and amount at Ith index in amounts list and quantity at Ith index in quantities list.
 
 You don't need to do changes in `dtos`. Just refer it for your understanding. Fields are already present in each class.
 

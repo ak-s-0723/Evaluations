@@ -1,14 +1,14 @@
 package org.example.evaluations.evaluation.controllers;
 
-import org.example.evaluations.evaluation.services.IPaymentService;
+import org.example.evaluations.evaluation.services.ISessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class PaymentController {
+public class SessionController {
 
     @Autowired
-    private IPaymentService paymentService;
+    private ISessionService sessionService;
 
-    //Add your API here
+    //Add your APIs here
 }

@@ -1,12 +1,17 @@
 package org.example.evaluations.clients;
 
 import org.example.evaluations.evaluation.clients.StripePaymentGateway;
+import org.example.evaluations.evaluation.dtos.SessionDto;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest
@@ -22,17 +27,23 @@ public class StripePaymentGatewayTest {
     @Test
     void testGetPaymentLinkSuccess() {
         // Arrange
-        Long amount = 350000L;
-        Long quantity = 1L;
-        String callbackUrl = "https://scaler.com";
-        String productName = "Academy Backend Course";
+        List<Long> amounts = new ArrayList<Long>();
+        List<Long> quantities = new ArrayList<Long>();
+        List<String> productNames = new ArrayList<>();
+        amounts.add(350000L);
+        amounts.add(15000L);
+        quantities.add(2L);
+        quantities.add(3L);
+        productNames.add("GoldPlan");
+        productNames.add("SilverPlan");
+        String successUrl = "https://scaler.com";
 
         stripePaymentGateway.apiKey = apiKey;
 
         // Act
-        String result = stripePaymentGateway.getPaymentLink(amount, quantity, callbackUrl, productName);
-
+        SessionDto sessionDto = stripePaymentGateway.createSession(successUrl,amounts,productNames,quantities);
         // Assert
-        assertNotNull(result);
+        assertNotNull(sessionDto);
+        assertEquals(745000,sessionDto.getTotal());
     }
 }
