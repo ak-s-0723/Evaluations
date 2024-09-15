@@ -1,16 +1,18 @@
-package org.example.evaluations.evaluation.clients;
+package org.example.evaluations.evaluation.services;
 
+import org.example.evaluations.evaluation.clients.StripePaymentGateway;
 import org.example.evaluations.evaluation.dtos.Webhook;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Component
-public class StripePaymentGateway {
 
-    @Value("${stripe.key}")
-    public String apiKey;
+@Service
+public class WebhookService implements IWebhookService {
+
+    @Autowired
+    private StripePaymentGateway stripePaymentGateway;
 
     public Webhook createWebhook(String url, List<String> events) {
         //Add your implementation here
@@ -22,10 +24,8 @@ public class StripePaymentGateway {
         return null;
     }
 
-
     public Webhook updateWebhook(String updatedUrl, List<String> events, String webhookId) {
         //Add your implementation here
         return null;
     }
-
 }

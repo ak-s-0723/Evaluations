@@ -2,11 +2,15 @@ package org.example.evaluations.implementation.clients;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.*;
+import com.stripe.model.WebhookEndpoint;
 import com.stripe.param.*;
+import org.example.evaluations.implementation.dtos.Webhook;
+import org.example.evaluations.implementation.dtos.WebhookStatus;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class StripePaymentGateway_ {
@@ -14,62 +18,96 @@ public class StripePaymentGateway_ {
     @Value("${stripe.key}")
     public String apiKey;
 
-    private final Long trialDays = 730L;
-
-    public String createSubscriptionForProduct(String customerName,String customerEmail,Long productAmount, String productName, PlanCreateParams.Interval interval) {
-        Stripe.apiKey = this.apiKey;
+    public Webhook createWebhook(String url, List<String> events) {
         try {
-            Customer customer = getCustomer(customerName,customerEmail);
-            Plan plan = getPlan(productName, interval, productAmount);
+            Stripe.apiKey = this.apiKey;
 
-            SubscriptionCreateParams params =
-                    SubscriptionCreateParams.builder()
-                            .setCustomer(customer.getId())
-                            .addItem(
-                                    SubscriptionCreateParams.Item.builder().setPlan(plan.getId())
-                                            .build()
-                            ).setTrialFromPlan(true)
+            List<WebhookEndpointCreateParams.EnabledEvent> enabledEvents = new ArrayList<>();
+
+            for(String event : events) {
+                enabledEvents.add(WebhookEndpointCreateParams.EnabledEvent.valueOf(event));
+            }
+
+            WebhookEndpointCreateParams params =
+                    WebhookEndpointCreateParams.builder()
+                            .addAllEnabledEvent(enabledEvents)
+                            .setUrl(url)
                             .build();
-            Subscription subscription = Subscription.create(params);
-            return subscription.getId();
+
+            WebhookEndpoint webhookEndpoint = WebhookEndpoint.create(params);
+
+            Webhook webhook = new Webhook();
+            webhook.setId(webhookEndpoint.getId());
+            webhook.setUrl(webhookEndpoint.getUrl());
+            webhook.setEvents(webhookEndpoint.getEnabledEvents());
+            webhook.setSecret(webhookEndpoint.getSecret());
+            webhook.setStatus(WebhookStatus.valueOf(webhookEndpoint.getStatus()));
+            return webhook;
+
         }catch (StripeException exception) {
             throw new RuntimeException(exception.getMessage());
         }
     }
 
-    private Product getProduct(String productName) {
+    public Boolean deleteWebhook(String webhookId) {
         try {
-            ProductCreateParams productCreateParams =
-                    ProductCreateParams.builder().setName(productName).build();
-            Product product = Product.create(productCreateParams);
-            return product;
-        }catch (StripeException exception) {
-            throw new RuntimeException(exception.getMessage());
-        }
-    }
-
-    private Plan getPlan(String productName, PlanCreateParams.Interval interval, Long planAmount) {
-        try {
-            PlanCreateParams planCreateParams = PlanCreateParams.builder().setTrialPeriodDays(trialDays).setProduct(getProduct(productName).getId()).setInterval(interval).setAmount(planAmount)
-                    .setCurrency("usd").build();
-            Plan plan = Plan.create(planCreateParams);
-            return  plan;
-        }catch (StripeException exception) {
-            throw new RuntimeException(exception.getMessage());
-        }
-    }
-
-    private Customer getCustomer(String customerName,String customerEmail) {
-        try {
-            CustomerCreateParams params =
-                    CustomerCreateParams.builder()
-                            .setName(customerName)
-                            .setEmail(customerEmail)
-                            .build();
-            Customer customer = Customer.create(params);
-            return customer;
+            Stripe.apiKey = this.apiKey;
+            WebhookEndpoint resource = WebhookEndpoint.retrieve(webhookId);
+            WebhookEndpoint webhookEndpoint = resource.delete();
+            return webhookEndpoint.getDeleted();
         } catch (StripeException exception) {
             throw new RuntimeException(exception.getMessage());
         }
     }
+
+
+    public Webhook updateWebhook(String updatedUrl, List<String> events, String webhookId) {
+        try {
+            Stripe.apiKey = this.apiKey;
+
+            List<WebhookEndpointUpdateParams.EnabledEvent> updatedEvents = new ArrayList<>();
+
+            if(events != null) {
+                for (String event : events) {
+                    updatedEvents.add(WebhookEndpointUpdateParams.EnabledEvent.valueOf(event));
+                }
+            }
+
+            WebhookEndpoint resource = WebhookEndpoint.retrieve(webhookId);
+
+            WebhookEndpointUpdateParams params = null;
+
+            if(updatedUrl != null && !updatedEvents.isEmpty()) {
+                 params =
+                        WebhookEndpointUpdateParams.builder()
+                                .addAllEnabledEvent(updatedEvents)
+                                .setUrl(updatedUrl)
+                                .build();
+            } else if(!updatedEvents.isEmpty()) {
+                 params =
+                        WebhookEndpointUpdateParams.builder()
+                                .addAllEnabledEvent(updatedEvents)
+                                .build();
+            } else {
+                 params =
+                        WebhookEndpointUpdateParams.builder()
+                                .setUrl(updatedUrl)
+                                .build();
+            }
+
+            WebhookEndpoint webhookEndpoint = resource.update(params);
+
+            Webhook webhook = new Webhook();
+            webhook.setId(webhookEndpoint.getId());
+            webhook.setUrl(webhookEndpoint.getUrl());
+            webhook.setEvents(webhookEndpoint.getEnabledEvents());
+            webhook.setSecret(webhookEndpoint.getSecret());
+            webhook.setStatus(WebhookStatus.valueOf(webhookEndpoint.getStatus()));
+            return webhook;
+
+        }catch (StripeException exception) {
+            throw new RuntimeException(exception.getMessage());
+        }
+    }
+
 }

@@ -1,12 +1,16 @@
-# Create a Stripe Subscription
+# Create, Update and Delete Webhook on Stripe
 
 ## Requirements
 
-In SubscriptionController, you need to implement an API with path `/subscription` which will take Body in form of SubscriptionRequestDto and return Id of created Subscription.
+In WebhookController, you need to implement 3 APIs
 
-In SubscriptionService, you need to complete `String createSubscriptionForProduct(String customerName,String customerEmail,Long productAmount, String productName, PlanCreateParams.Interval interval)` method
+ - An API with path `/webhook` to create Webhook accepting body in form of WebhookDto and returning created Webhook (present in dtos).
+ - An API with path `/webhook/{id}` to delete Webhook which will return Boolean result.
+ - An API with path `/webhook/{id}` to update existing Webhook accepting body in form of WebhookDto and returning updated Webhook (present in dtos).
 
-In StripePaymentGateway, please implement `createSubscriptionForProduct` Method. You can take help from [Link](https://docs.stripe.com/api/subscriptions/create) , but exact logic will not help, as we also want to give free Trial for 730 days. Whatever information you need is provided as input, please use those parameters only and don't modify function signature.
+In WebhookService, you need to  complete all 3 methods.
+
+In StripePaymentGateway, please implement all 3 Method. You can take help from [Link](https://docs.stripe.com/api/webhook_endpoints)
 
 You don't need to do changes in `dtos`. Just refer it for your understanding. Fields are already present in each class.
 
