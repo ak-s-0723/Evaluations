@@ -2,12 +2,17 @@ package org.example.evaluations.implementation.clients;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.PaymentLink;
-import com.stripe.model.Price;
-import com.stripe.param.PaymentLinkCreateParams;
-import com.stripe.param.PriceCreateParams;
+import com.stripe.model.PaymentIntent;
+import com.stripe.model.PaymentIntentCollection;
+import com.stripe.param.PaymentIntentCancelParams;
+import com.stripe.param.PaymentIntentCreateParams;
+import com.stripe.param.PaymentIntentListParams;
+import org.example.evaluations.implementation.dtos.PaymentIntent_;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class StripePaymentGateway_ {
@@ -15,53 +20,64 @@ public class StripePaymentGateway_ {
     @Value("${stripe.key}")
     public String apiKey;
 
-    public String getPaymentLink(Long amount, Long quantity, String callbackUrl, String productName) {
+    public String createPaymentIntent(Long amount) {
         try {
             Stripe.apiKey = this.apiKey;
-            Price price = getPrice(amount,productName);
-
-            PaymentLinkCreateParams params =
-                    PaymentLinkCreateParams.builder()
-                            .addLineItem(
-                                    PaymentLinkCreateParams.LineItem.builder()
-                                            .setPrice(price.getId())
-                                            .setQuantity(quantity)
+            PaymentIntentCreateParams params =
+                    PaymentIntentCreateParams.builder()
+                            .setAmount(amount)
+                            .setCurrency("usd")
+                            .setAutomaticPaymentMethods(
+                                    PaymentIntentCreateParams.AutomaticPaymentMethods.builder()
+                                            .setEnabled(true)
                                             .build()
-                            ).setAfterCompletion(PaymentLinkCreateParams.AfterCompletion.builder()
-                                    .setType(PaymentLinkCreateParams.AfterCompletion.Type.REDIRECT)
-                                    .setRedirect(PaymentLinkCreateParams.AfterCompletion.Redirect.builder()
-                                            .setUrl(callbackUrl)
-                                            .build())
-                                    .build())
+                            )
                             .build();
-
-            PaymentLink paymentLink = PaymentLink.create(params);
-            return paymentLink.getUrl();
+            PaymentIntent paymentIntent = PaymentIntent.create(params);
+            return paymentIntent.getId();
         }catch (StripeException exception) {
-            throw new RuntimeException(exception);
+            throw new RuntimeException(exception.getMessage());
         }
     }
 
-    private Price getPrice(Long amount,String productName) {
+    public List<PaymentIntent_> listPaymentIntents() {
         try {
-            PriceCreateParams params =
-                    PriceCreateParams.builder()
-                            .setCurrency("usd")
-                            .setUnitAmount(amount)
-                            .setRecurring(
-                                    PriceCreateParams.Recurring.builder()
-                                            .setInterval(PriceCreateParams.Recurring.Interval.MONTH)
-                                            .build()
-                            )
-                            .setProductData(
-                                    PriceCreateParams.ProductData.builder().setName(productName).build()
-                            )
-                            .build();
+            Stripe.apiKey = this.apiKey;
+            PaymentIntentListParams params =
+                    PaymentIntentListParams.builder().setLimit(100L).build();
+            PaymentIntentCollection paymentIntentCollection = PaymentIntent.list(params);
+            List<PaymentIntent> paymentIntents =  paymentIntentCollection.getData();
+            List<PaymentIntent_> response = new ArrayList<>();
+            for(PaymentIntent stripePaymentIntent : paymentIntents) {
+                PaymentIntent_ paymentIntent = new PaymentIntent_();
+                paymentIntent.setPaymentMethodTypes(stripePaymentIntent.getPaymentMethodTypes());
+                paymentIntent.setId(stripePaymentIntent.getId());
+                if(stripePaymentIntent.getAutomaticPaymentMethods() != null) {
+                    paymentIntent.setAreAutomaticPaymentMethodsEnabled(stripePaymentIntent.getAutomaticPaymentMethods().getEnabled());
+                }
+                paymentIntent.setAmount(stripePaymentIntent.getAmount());
+                paymentIntent.setStatus(stripePaymentIntent.getStatus());
+                response.add(paymentIntent);
+            }
 
-            Price price = Price.create(params);
-            return price;
+            return response;
+
         }catch (StripeException exception) {
-            throw new RuntimeException(exception);
+            throw new RuntimeException(exception.getMessage());
+        }
+    }
+
+    public Boolean cancelPaymentIntent(String id) {
+        try {
+            Stripe.apiKey = this.apiKey;
+            PaymentIntent resource = PaymentIntent.retrieve(id);
+            if(!resource.getStatus().equals("canceled")) {
+                PaymentIntentCancelParams params = PaymentIntentCancelParams.builder().build();
+                resource.cancel(params);
+            }
+            return true;
+        }catch (StripeException exception) {
+            throw new RuntimeException(exception.getMessage());
         }
     }
 }

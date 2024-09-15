@@ -5,9 +5,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class InitializePaymentRequestDto_ {
+public class PaymentIntentRequestDto_ {
     Long amount;
-    Long quantity;
-    String callbackUrl;
-    String productName;
 }
