@@ -12,5 +12,6 @@ for branch in "${REQUIRED_BRANCHES[@]}"; do
         echo "Local branch '$branch' exists."
     else
         echo "Error : Local branch '$branch' does not exist."
+        exit 1
     fi
 done

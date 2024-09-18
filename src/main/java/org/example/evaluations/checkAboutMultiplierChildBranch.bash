@@ -6,4 +6,5 @@ if git rev-list --left-right --count "$BRANCH_B".."$BRANCH_A" | awk '{print $2}'
     echo "$BRANCH_A contains all commits from $BRANCH_B"
 else
     echo "Error : $BRANCH_A does not contain all commits from $BRANCH_B"
+    exit 1
 fi
