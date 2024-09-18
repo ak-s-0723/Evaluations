@@ -4,7 +4,7 @@ EXPECTED_EXTRA_COMMITS=1        # Number of extra commits expected in the target
 
 # Ensure we are in a git repository
 if [ ! -d .git ]; then
-    echo "This is not a git repository."
+    echo "Error : This is not a git repository."
     exit 1
 fi
 
@@ -14,12 +14,12 @@ git fetch --all
 
 # Check if the branches exist
 if ! git rev-parse --verify "$SOURCE_BRANCH" >/dev/null 2>&1; then
-    echo "Source branch '$SOURCE_BRANCH' does not exist."
+    echo "Error : Source branch '$SOURCE_BRANCH' does not exist."
     exit 1
 fi
 
 if ! git rev-parse --verify "$TARGET_BRANCH" >/dev/null 2>&1; then
-    echo "Target branch '$TARGET_BRANCH' does not exist."
+    echo "Error : Target branch '$TARGET_BRANCH' does not exist."
     exit 1
 fi
 

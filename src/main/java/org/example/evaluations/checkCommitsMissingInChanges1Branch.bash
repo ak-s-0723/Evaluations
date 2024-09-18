@@ -4,7 +4,7 @@ EXPECTED_EXTRA_COMMITS=2        # Number of extra commits expected in the target
 
 # Ensure we are in a git repository
 if [ ! -d .git ]; then
-    echo "This is not a git repository."
+    echo "Error : This is not a git repository."
     exit 1
 fi
 
@@ -14,12 +14,12 @@ git fetch --all
 
 # Check if the branches exist
 if ! git rev-parse --verify "$SOURCE_BRANCH" >/dev/null 2>&1; then
-    echo "Source branch '$SOURCE_BRANCH' does not exist."
+    echo "Error : Source branch '$SOURCE_BRANCH' does not exist."
     exit 1
 fi
 
 if ! git rev-parse --verify "$TARGET_BRANCH" >/dev/null 2>&1; then
-    echo "Target branch '$TARGET_BRANCH' does not exist."
+    echo "Error : Target branch '$TARGET_BRANCH' does not exist."
     exit 1
 fi
 
@@ -30,5 +30,5 @@ extra_commits_count=$(git log "$TARGET_BRANCH" --not "$SOURCE_BRANCH" --oneline 
 if [ "$extra_commits_count" -eq "$EXPECTED_EXTRA_COMMITS" ]; then
     echo "Branch '$SOURCE_BRANCH' has been merged into '$TARGET_BRANCH' and the '$TARGET_BRANCH' has exactly $EXPECTED_EXTRA_COMMITS extra commits."
 else
-    echo "Branch '$SOURCE_BRANCH' has been merged into '$TARGET_BRANCH', but the number of extra commits is not as expected ($extra_commits_count extra commits found)."
+    echo "Error : Branch '$SOURCE_BRANCH' has been merged into '$TARGET_BRANCH', but the number of extra commits is not as expected ($extra_commits_count extra commits found)."
 fi
