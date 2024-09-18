@@ -12,3 +12,4 @@
 
 ## Hints
    - Please hit submit only after doing all tasks.
+   - In this assignment, No need to worry about java code, These are primarily testing execution of Git Commands.
