@@ -11,4 +11,5 @@ if git branch -r | grep -q "$REMOTE_NAME/$BRANCH_NAME"; then
     echo "Remote branch '$REMOTE_NAME/$BRANCH_NAME' exists."
 else
     echo "Error : Remote branch '$REMOTE_NAME/$BRANCH_NAME' does not exist."
+    exit 1
 fi
