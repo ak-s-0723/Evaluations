@@ -5,4 +5,5 @@ if git diff --cached --name-only | grep -Fxq "$FILENAME"; then
     echo "The file '$FILENAME' is in the staging area."
 else
     echo "Error : The file '$FILENAME' is not in the staging area."
+    exit 1
 fi
