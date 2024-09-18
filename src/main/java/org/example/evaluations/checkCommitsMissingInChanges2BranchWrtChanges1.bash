@@ -31,4 +31,5 @@ if [ "$extra_commits_count" -eq "$EXPECTED_EXTRA_COMMITS" ]; then
     echo "Branch '$TARGET_BRANCH' has exactly $EXPECTED_EXTRA_COMMITS extra commits."
 else
     echo "Error : The number of extra commits is not as expected ($extra_commits_count extra commits found)."
+    exit 1
 fi

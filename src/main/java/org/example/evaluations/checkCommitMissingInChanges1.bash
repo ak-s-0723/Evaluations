@@ -16,6 +16,7 @@ fi
 # Check if the commit is missing in the target branch
 if git log "$TARGET_BRANCH" --grep="$COMMIT_MESSAGE" --format="%H" | grep -q "$COMMIT_HASH"; then
     echo "Error : Commit with message '$COMMIT_MESSAGE' exists in branch '$TARGET_BRANCH'."
+    exit 1
 else
     echo "Commit with message '$COMMIT_MESSAGE' is MISSING in branch '$TARGET_BRANCH'."
 fi

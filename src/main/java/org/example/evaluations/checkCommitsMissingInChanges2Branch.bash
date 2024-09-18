@@ -31,4 +31,5 @@ if [ "$extra_commits_count" -eq "$EXPECTED_EXTRA_COMMITS" ]; then
     echo "Branch '$SOURCE_BRANCH' has been merged into '$TARGET_BRANCH' and the '$TARGET_BRANCH' has exactly $EXPECTED_EXTRA_COMMITS extra commits."
 else
     echo "Error : Branch '$SOURCE_BRANCH' has been merged into '$TARGET_BRANCH', but the number of extra commits is not as expected ($extra_commits_count extra commits found)."
+    exit 1
 fi
