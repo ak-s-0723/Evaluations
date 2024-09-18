@@ -12,4 +12,5 @@ if [ -n "$COMMIT_HASH" ]; then
     echo "Commit with message '$COMMIT_MESSAGE' exists in branch '$BRANCH' (commit hash: $COMMIT_HASH)."
 else
     echo "Error : No commit with message '$COMMIT_MESSAGE' found in branch '$BRANCH'."
+    exit 1
 fi
