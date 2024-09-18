@@ -1,6 +1,7 @@
-SCRIPT1="./checkIfCommitCreatedInDecrementBranch.bash"
-SCRIPT2="./checkIfCommitCreatedInIncrementBranch.bash"
-SCRIPT3="./checkCommitsInCalculatorBranch.bash"
+SCRIPT1="./checkIfRectangleIsInStagingArea.bash"
+SCRIPT2="./checkIfSquareIsInStagingArea.bash"
+SCRIPT3="./checkIfMainIsNotInStagingArea.bash"
+SCRIPT4="./checkIfUserHasTriedToBringMainBackFromStagingArea.bash"
 
 echo "Executing $SCRIPT1..."
 if ! bash "$SCRIPT1"; then
@@ -22,6 +23,15 @@ if ! bash "$SCRIPT3"; then
     echo "Error: $SCRIPT3 failed"
     exit 1
 fi
+echo
+echo
+echo
+echo "Executing $SCRIPT4..."
+if ! bash "$SCRIPT4"; then
+    echo "Error: $SCRIPT4 failed"
+    exit 1
+fi
+echo
 echo
 echo
 echo "All scripts executed successfully."
