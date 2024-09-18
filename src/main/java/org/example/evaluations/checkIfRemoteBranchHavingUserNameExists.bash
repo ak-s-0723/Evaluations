@@ -1,6 +1,6 @@
 REMOTE_NAME="origin"
 USER=`whoami`
-BRANCH_NAME="subtractor_$USER"
+BRANCH_NAME="multiplier_$USER"
 COMMIT_MESSAGE="Added1 Subtractor Functionality"
 
 echo "Fetching latest remote references..."
