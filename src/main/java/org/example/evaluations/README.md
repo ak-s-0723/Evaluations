@@ -2,6 +2,7 @@
 
 ## Requirements
 
+- You need to set up [Git Repo](https://github.com/ak-s-0723/Assignment1) on shell where you are attempting this assignment.
  - You need to create 3 branches with name `calculator` , `decrement` and `increment` from default branch `main`
  - In `increment` branch, create a file with name Increment.java in src and IncrementTest.java in tst taking help from Adder
  - Create commit with title `Added Incrementor`
