@@ -7,19 +7,15 @@ import org.example.evaluations.evaluation.services.UserSearchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageRequest;
 
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 @SpringBootTest
 public class UserSearchServiceTest {
 
-    @MockBean
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -30,11 +26,9 @@ public class UserSearchServiceTest {
     public void testGetUsersHavingAddress() {
         // Arrange
         User user1 = createUser(1L, "user1@example.com", "User One", "Street", Sex.MALE,3);
-        User user2 = createUser(2L, "user2@example.com", "User Two", "Street", Sex.FEMALE,4);
-
-        List<User> users = Arrays.asList(user1, user2);
-
-        when(userRepository.findUserByAddressEquals("Street", PageRequest.of(0, 5))).thenReturn(users);
+        User user2 = createUser(2L, "user2@example.com", "User Two", "Street", Sex.MALE,7);
+        userRepository.save(user1);
+        userRepository.save(user2);
 
         // Act
         List<User> result = userSearchService.getUsersHavingAddress("Street", 0);
@@ -47,10 +41,8 @@ public class UserSearchServiceTest {
     @Test
     public void testGetDetailsOfAllLadies() {
         // Arrange
-        User lady1 = createUser(1L, "lady1@example.com", "Lady One", "123 Street", Sex.FEMALE,12);
-        List<User> ladies = Arrays.asList(lady1);
-
-        when(userRepository.findUserBySexEquals(Sex.FEMALE, PageRequest.of(0, 5))).thenReturn(ladies);
+        User lady1 = createUser(3L, "lady1@example.com", "Lady One", "123 Street", Sex.FEMALE,12);
+        userRepository.save(lady1);
 
         // Act
         List<User> result = userSearchService.getDetailsOfAllLadies(0);
@@ -63,10 +55,8 @@ public class UserSearchServiceTest {
     @Test
     public void testGetDetailsOfAllAdultMales() {
         // Arrange
-        User male1 = createUser(1L, "male1@example.com", "Male One", "1234567890", Sex.MALE,21);
-        List<User> males = Arrays.asList(male1);
-
-        when(userRepository.findUserBySexAndAgeGreaterThanEqual(Sex.MALE, 18, PageRequest.of(0, 5))).thenReturn(males);
+        User male1 = createUser(5L, "male1@example.com", "Male One", "ABC Nagar", Sex.MALE,21);
+        userRepository.save(male1);
 
         // Act
         List<User> result = userSearchService.getDetailsOfAllAdultMales(0);
@@ -76,12 +66,12 @@ public class UserSearchServiceTest {
         assertEquals("male1@example.com", result.get(0).getEmailId(),"You need to declare `findUserBySexAndAgeGreaterThanEqual` in UserRepo");
     }
 
-    private User createUser(Long id, String emailId, String name, String phoneNumber, Sex sex,Integer age) {
+    private User createUser(Long id, String emailId, String name, String address, Sex sex,Integer age) {
         User user = new User();
         user.setId(id);
         user.setEmailId(emailId);
         user.setName(name);
-        user.setPhoneNumber(phoneNumber);
+        user.setAddress(address);
         user.setSex(sex);
         user.setAge(age);
         return user;

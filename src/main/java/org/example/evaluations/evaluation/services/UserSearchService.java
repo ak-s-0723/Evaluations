@@ -16,7 +16,7 @@ public class UserSearchService {
     private final Integer pageSize = 5;
 
     public List<User> getUsersHavingAddress(String address,Integer pageNumber) {
-       return null;
+        return null;
     }
 
     public List<User> getDetailsOfAllLadies(Integer pageNumber) {
