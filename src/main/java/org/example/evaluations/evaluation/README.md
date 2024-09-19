@@ -9,7 +9,6 @@ You need to add functionality for finding Employees based on department and sort
       - An Api with path `/employeeFinder` to find employees by department accepting body in form of EmployeeFinderRequestDto and returning `Page<Employee>`
       
  - You need to add implementation in `findEmployees` method present in EmployeeFinderService. This method is also taking list of Sort Params which Admin can provide. You need to return data in pages in sorted order. In case 2 employees are tieing at some sort criteria, then next sort criteria will be used to remove tie.
- - You might need to declare some methods in EmployeeRepository, otherwise TestCase will fail in compilation, because mocking is done on those methods.
 
 ## Hints
  - Nothing is needed from your side in pom.xml or application.properties
