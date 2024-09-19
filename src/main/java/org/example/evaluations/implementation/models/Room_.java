@@ -2,26 +2,21 @@ package org.example.evaluations.implementation.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
+@Entity
 @Setter
 @Getter
-@Entity(name="user__")
-public class User {
-
+public class Room_ {
     @Id
     private Long id;
 
-    private String emailId;
+    private RoomType_ roomType;
 
-    private String name;
-
-    private String phoneNumber;
-
-    private String address;
-
-    private Sex_ sex;
-
-    private Integer age;
+    @ManyToMany(mappedBy = "rooms")
+    private List<Booking_> bookings;
 }
