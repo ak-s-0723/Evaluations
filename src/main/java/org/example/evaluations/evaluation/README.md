@@ -6,9 +6,9 @@ You need to add functionality for searching Users based on different criteria
 
  - You need to add following APIs in UserSearchController
      
-      - An Api with path `/search` to search users by address accepting body in form of UserSearchRequestDto and returning `List<User`
-      - An Api with path `search/ladies` to get details of all Ladies accepting `pageNumber` with datatype Integer as query parameter and returning `List<User`
-      - An Api with path `search/adultMales` to get details of all Men having age >= 18 accepting `pageNumber` with datatype Integer as query parameter and returning `List<User`
+      - An Api with path `/search` to search users by address accepting body in form of UserSearchRequestDto and returning `List<User>`
+      - An Api with path `search/ladies` to get details of all Ladies accepting `pageNumber` with datatype Integer as query parameter and returning `List<User>`
+      - An Api with path `search/adultMales` to get details of all Men having age >= 18 accepting `pageNumber` with datatype Integer as query parameter and returning `List<User>`
  - You need to add implementation in methods present in UserSearchService, taking help from UserRepository. 
  - You need to declare some methods in UserRepository, otherwise TestCase will fail in compilation, because mocking is done on those methods.
 
