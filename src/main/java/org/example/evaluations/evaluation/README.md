@@ -1,16 +1,15 @@
-# Search Users based on different Criteria and Get Results in pages
+# Find and Sort Employees 
 
-You need to add functionality for searching Users based on different criteria
+You need to add functionality for finding Employees based on department and sorting data based on input provided by Admin.
 
 ## Requirements
 
- - You need to add following APIs in UserSearchController
+ - You need to add following API in EmployeeFinderController
      
-      - An Api with path `/search` to search users by address accepting body in form of UserSearchRequestDto and returning `List<User>`
-      - An Api with path `search/ladies` to get details of all Ladies accepting `pageNumber` with datatype Integer as query parameter and returning `List<User>`
-      - An Api with path `search/adultMales` to get details of all Men having age >= 18 accepting `pageNumber` with datatype Integer as query parameter and returning `List<User>`
- - You need to add implementation in methods present in UserSearchService, taking help from UserRepository. 
- - You need to declare some methods in UserRepository, otherwise TestCase will fail in compilation, because mocking is done on those methods.
+      - An Api with path `/employeeFinder` to find employees by department accepting body in form of EmployeeFinderRequestDto and returning `Page<Employee>`
+      
+ - You need to add implementation in `findEmployees` method present in EmployeeFinderService. This method is also taking list of Sort Params which Admin can provide. You need to return data in pages in sorted order. In case 2 employees are tieing at some sort criteria, then next sort criteria will be used to remove tie.
+ - You might need to declare some methods in EmployeeRepository, otherwise TestCase will fail in compilation, because mocking is done on those methods.
 
 ## Hints
  - Nothing is needed from your side in pom.xml or application.properties

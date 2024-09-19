@@ -1,15 +1,14 @@
 package org.example.evaluations.evaluation.controllers;
 
-import org.example.evaluations.evaluation.services.UserSearchService;
+import org.example.evaluations.evaluation.services.EmployeeFinderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-
 @RestController
-public class UserSearchController {
+public class EmployeeFinderController {
 
     @Autowired
-    private UserSearchService userSearchService;
+    private EmployeeFinderService employeeFinderService;
 
     //Add your APIs here
 }

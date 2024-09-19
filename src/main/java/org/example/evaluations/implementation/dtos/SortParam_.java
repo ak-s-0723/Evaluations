@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Setter
 @Getter
-public class UserSearchRequestDto_ {
-    private String query;
-    private Integer pageNumber;
+public class SortParam_ {
+    private String paramName;
+    private SortType_ sortType;
 }
