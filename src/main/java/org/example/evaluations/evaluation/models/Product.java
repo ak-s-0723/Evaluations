@@ -7,21 +7,19 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@Entity(name="user_")
-public class User {
+@Entity
+public class Product {
 
     @Id
     private Long id;
 
-    private String emailId;
+    private Double weight;
+
+    private Double amount;
+
+    private Long age;
+
+    private String category;
 
     private String name;
-
-    private String phoneNumber;
-
-    private String address;
-
-    private Sex sex;
-
-    private Integer age;
 }
