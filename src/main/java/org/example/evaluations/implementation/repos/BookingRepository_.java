@@ -9,11 +9,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Repository
 public interface BookingRepository_ extends JpaRepository<Booking_, UUID> {
        Page<Booking_> findBookingsByGuest(Guest_ guest, Pageable pageable);
+
+       List<Booking_> findBookingsByGuestFirstNameAndGuestLastName(String firstName, String lastName);
 
        Page<Booking_> findBookingByDate(Date date, Pageable pageable);
 

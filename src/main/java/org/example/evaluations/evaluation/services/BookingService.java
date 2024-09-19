@@ -28,10 +28,10 @@ public class BookingService {
 
     // In case Mayor is having multiple bookings, pick first entry
     public Page<Booking> getAllBookingsOnDateWhenMayorIsStaying(String firstName,String lastName, Integer pageNumber,Integer pageSize) {
-         return null;
+        return null;
     }
 
     public Page<Booking> getAllBookingsDoneForRoomOnParticularDate(Long roomNumber, Date date,Integer pageNumber,Integer pageSize) {
-          return null;
+        return null;
     }
 }

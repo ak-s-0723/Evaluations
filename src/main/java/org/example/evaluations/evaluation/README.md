@@ -7,16 +7,15 @@ You need to add functionality for searching Bookings based on different criteria
  - You need to add following APIs in BookingController
      
       - An Api with path `bookings/guestEmail` to search bookings done by a guest accepting body in form of BookingSearchDto and returning `Page<Booking>`
-      - An Api with path `bookings/guestName` to search other bookings on Date when Mayor is staying, accepting body in form of BookingSearchDto and returning `Page<Booking>`. We just know mayor name and not date on which he is gonna stay. 
+      - An Api with path `bookings/guestName` to search all bookings on Date when Mayor is staying, accepting body in form of BookingSearchDto and returning `Page<Booking>`. We just know mayor name and not date on which he is gonna stay. 
       - An Api with path `bookings/roomNumber_date` to search all bookings on a particular date which is occupying a particular room accepting body in form of BookingSearchDto and returning `Page<Booking>`.
 
  - You need to add implementation in following methods present in BookingService
     
     - Implement `getAllBookingDoneByGuest` with help of GuestRepo and Booking Repo
-    - Implement `getAllBookingsOnDateWhenMayorIsStaying` with help of GuestRepo and BookingRepo. In case mayor has done multiple bookings, pick first one.
+    - Implement `getAllBookingsOnDateWhenMayorIsStaying` with help of BookingRepo. In case mayor has done multiple bookings, pick first one.
     - Implement `getAllBookingsDoneForRoomOnParticularDate` with help of RoomRepo and BookingRepo.
     - All these methods will be returning results in form of Pages along with metadata about those pages.
- - You need to declare methods in Repos , otherwise TestCase will fail in compilation, because mocking is done on those methods.
 
 ## Hints
  - Nothing is needed from your side in pom.xml or application.properties

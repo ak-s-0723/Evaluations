@@ -38,12 +38,7 @@ public class BookingService_ {
 
     // In case Mayor is having multiple bookings, pick first entry
     public Page<Booking_> getAllBookingsOnDateWhenMayorIsStaying(String firstName, String lastName, Integer pageNumber, Integer pageSize) {
-         Optional<Guest_> guestOptional = guestRepository.findGuestByFirstNameAndLastName(firstName,lastName);
-         if(guestOptional.isEmpty()) return null;
-
-         Guest_ guest = guestOptional.get();
-         List<Booking_> bookings = guest.getBookings();
-
+         List<Booking_> bookings = bookingRepository.findBookingsByGuestFirstNameAndGuestLastName(firstName,lastName);
          Booking_ booking = bookings.get(0);
          return  bookingRepository.findBookingByDate(booking.getDate(),PageRequest.of(pageNumber,pageSize));
     }
