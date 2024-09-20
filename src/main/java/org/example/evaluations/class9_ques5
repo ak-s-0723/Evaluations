@@ -1,0 +1,28 @@
+Q Suppose you have an Entity with Name "Student" and it contain multiple attributes,
+out which one is "weight". In StudentRepository, If I will declare method with name
+ - "List<Student> findAllOrderByWeightDesc()". What do you think will happen
+
+- It will result in Compilation Error
+
+- It will result in Runtime Error
+
+- It will run successfully but give wrong result
+
+- It will run successfully and give right result
+
+Answer - It will result in Compilation Error
+
+
+
+Q How can you define a derived query in Spring Data JPA?
+
+- By annotating a method with @Query
+
+- By creating a method in the repository with a specific naming convention
+
+- By using the @DerivedQuery annotation
+
+- By creating an XML configuration
+
+Answer - By creating a method in the repository with a specific naming convention
+

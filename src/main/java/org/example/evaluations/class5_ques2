@@ -1,0 +1,24 @@
+Q Which HTTP status code range indicates a client error?
+
+- 200-299
+
+- 300-399
+
+- 400-499
+
+- 500-599
+
+Answer - 400-499
+
+
+Q what is use of idempotency in REST API design ?
+
+- The ability of an API to handle multiple requests in parallel
+
+- The property that a method can be called multiple times without different outcomes
+
+- The capability of an API to update data
+
+- The feature of an API that allows it to delete resources
+
+Answer - The property that a method can be called multiple times without different outcomes

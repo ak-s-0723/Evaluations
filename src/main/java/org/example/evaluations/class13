@@ -1,0 +1,66 @@
+Q Which AWS service is designed for building, training, and deploying machine learning models at scale?
+
+- Amazon Lambda
+
+- AWS EC2
+
+- Amazon Redshift
+
+- Amazon SageMaker
+
+Answer - Amazon SageMaker
+
+
+
+Q Which AWS service can be used to automatically scale EC2 instances based on demand?
+
+- AWS ELK
+
+- Amazon EC2 Auto Scaling
+
+- AWS Elastic Beanstalk
+
+- Amazon Route 53
+
+
+Answer - Amazon EC2 Auto Scaling
+
+
+Q  What is the purpose of AWS Cloud Formation?
+
+- Managing and deploying virtual servers
+
+- Storing and analyzing large datasets
+
+- Configuring network security groups
+
+- Automating the deployment of infrastructure as code
+
+Answer - Automating the deployment of infrastructure as code
+
+
+Q  Which AWS service provides a scalable, fully managed NoSQL database?
+
+- Amazon S3
+
+- AWS Lambda
+
+- Amazon DynamoDB
+
+- Amazon Redshift
+
+Answer - Amazon DynamoDB
+
+
+Q  Which AWS service can be used to securely store and manage secrets such as database credentials?
+
+- AWS Secrets Manager
+
+- AWS Key Management Service (KMS)
+
+- AWS Shield
+
+- AWS Firewall Manager
+
+Answer - AWS Secrets Manager
+

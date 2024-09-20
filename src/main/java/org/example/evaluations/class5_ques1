@@ -1,0 +1,25 @@
+Q Which is correct URI format to get a sub-resource by resource id and sub-resource id
+
+-   /{resource}/{resource-id}/{sub-resource}/{sub-resource-id}
+
+-   /{resource}/{sub-resource}/{sub-resource-id}
+
+-   {sub-resource}/{sub-resource-id}/{resource}/{resource-id}
+
+-   /{resource}/{resource-id}/{sub-resource-id}/{sub-resource}
+
+Answer - /{resource}/{resource-id}/{sub-resource}/{sub-resource-id}
+
+
+Q - What is the role of the "Content-Type" header in a REST API request?
+
+-  It specifies the HTTP method to be used
+
+-  It defines the format of the request payload
+
+-  It provides authentication credentials
+
+-  It determines the cache control policy for the request
+
+Answer - It defines the format of the request payload
+

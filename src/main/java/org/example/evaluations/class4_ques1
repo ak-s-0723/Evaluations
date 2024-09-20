@@ -1,0 +1,26 @@
+Q Which among the following isn’t a maven goal?
+
+ - clean
+
+ - debug
+
+ - install
+
+ - none of above
+
+
+ Answer - debug
+
+
+
+Q Which phase of the Maven life cycle generates any source code that will be used in the compilation phase?
+
+- generate-sources
+
+- generate-resources
+
+- generate-test-sources
+
+- none of above
+
+Answer - generate-sources

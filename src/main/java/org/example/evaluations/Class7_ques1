@@ -1,0 +1,24 @@
+Q what is the role of the ViewResolver in Spring MVC ?
+
+- Resolving bean dependencies
+
+- Handling exceptions
+
+- Resolving views to specific URLs
+
+- Handling request parameters
+
+Answer - Resolving views to specific URLs
+
+
+Q  Which Spring annotation is used to handle Cross-Origin Resource Sharing (CORS) in Spring MVC?
+
+- @CrossOrigin
+
+- @CORSHandler
+
+- @EnableCORS
+
+- @CORSConfig
+
+Answer - @CrossOrigin

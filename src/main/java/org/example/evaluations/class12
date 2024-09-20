@@ -1,0 +1,68 @@
+Q Which of the following is a key benefit of using Amazon S3 for storing data?
+
+- Unlimited storage capacity
+
+- Low-latency data retrieval
+
+- Automatic data encryption
+
+- Real-time data analytics
+
+Answer - Automatic data encryption
+
+
+
+Q Which AWS service is used to launch and manage virtual servers in the cloud?
+
+- Amazon S3
+
+- AWS Lambda
+
+- Amazon EC2
+
+- Amazon RDS
+
+Answer - Amazon EC2
+
+
+Q  What does the "R" stand for in the AWS service "Amazon RDS"?
+
+- Reliable
+
+- Relational
+
+- Real-time
+
+- Remote
+
+Answer - Relational
+
+
+
+Q  What does the acronym "IAM" stand for in AWS?
+
+- Internet Access Management
+
+- Identity and Access Management
+
+- Infrastructure Authentication Model
+
+- Intelligent Authorization Mechanism
+
+
+Answer - Identity and Access Management
+
+
+
+Q - What AWS service is used to create and manage virtual private networks (VPNs) in the cloud?
+
+- Amazon VPC
+
+- Amazon EC2
+
+- AWS Direct Connect
+
+- Amazon Route 53
+
+Answer - Amazon VPC
+

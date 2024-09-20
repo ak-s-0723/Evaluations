@@ -1,0 +1,58 @@
+Q Which of the following are the components of AWS infrastructure?
+
+- Edge location
+- Regions
+- Availability zone
+- Regional Edge caches
+- All of the above
+
+Answer - All of the above
+
+
+Q  What is used to grant permissions to your IAM Users to access AWS resources within your own or different account.
+
+- IAM root user
+- IAM groups
+- IAM roles
+
+Answer - IAM roles
+
+
+Q Which AWS service can be used to distribute traffic across multiple EC2 instances or load balancers?
+
+- Amazon Route 53
+
+- AWS Elastic Beanstalk
+
+- AWS Auto Scaling
+
+- Amazon CloudFront
+
+Answer - Amazon Route 53
+
+
+Q  Which AWS service provides a fully managed message queueing service?
+
+- Amazon SNS
+
+- Amazon SQS
+
+- Amazon SES
+
+Answer - Amazon SQS
+
+
+Q Which AWS service is used for content delivery network (CDN) services?
+
+- Amazon CloudFront
+
+- Amazon Route 53
+
+- Amazon CDN
+
+- None of above
+
+Answer - Amazon CloudFront
+
+
+
