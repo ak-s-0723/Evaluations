@@ -15,7 +15,7 @@ public class ProductSearchService {
     private ProductRepository productRepository;
 
     public Slice<Product> findProductsWhichCanBeTakenInHandBaggageBecauseOfWeightLimit(Double allowedLimit, Double actualWeight,Integer pageNumber,Integer pageSize) {
-        return null;
+       return null;
     }
 
 
