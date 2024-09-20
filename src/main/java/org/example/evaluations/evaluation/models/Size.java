@@ -1,7 +1,7 @@
 package org.example.evaluations.evaluation.models;
 
-public enum Sex {
-    MALE,
-    FEMALE,
-    OTHER
+public enum Size {
+    SMALL,
+    LARGE,
+    MEDIUM
 }

@@ -1,10 +1,9 @@
 package org.example.evaluations.evaluation.repos;
 
-import org.example.evaluations.evaluation.models.User;
+import org.example.evaluations.evaluation.models.Flight;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-
 @Repository
-public interface UserRepository  extends JpaRepository<User,Long> {
+public interface FlightRepository extends JpaRepository<Flight,String> {
 }

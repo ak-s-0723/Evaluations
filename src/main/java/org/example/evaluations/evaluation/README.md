@@ -1,15 +1,18 @@
-# Search Users based on different Criteria and Get Results in pages
+# Search Flights where user query matches any field
 
-You need to add functionality for searching Users based on different criteria
+You need to implement functionality where Cx will search with particular query and we need to give him all flights where his query matches any of flight attribute be it source, id, airline etc.. 
 
 ## Requirements
 
- - You need to add following APIs in UserSearchController
+ - You need to add an API in SearchController
      
-      - An Api with path `/search` to search users by address accepting body in form of UserSearchRequestDto and returning `List<User>`
-      - An Api with path `search/ladies` to get details of all Ladies accepting `pageNumber` with datatype Integer as query parameter and returning `List<User>`
-      - An Api with path `search/adultMales` to get details of all Men having age >= 18 accepting `pageNumber` with datatype Integer as query parameter and returning `List<User>`
- - You need to add implementation in methods present in UserSearchService, taking help from UserRepository.
+      - An Api with path `/search/{query}` to search flights matching query provided by user and return response in form of `Page<Flight>`. pageSize and pageNumber will be consumed as query parameters.
+      
+ - You need to add implementation of `getFlightsMatchingSearchQuery` present in OpenSearchService, taking help from FlightRepository. 
+
+    - In implementation, please make sure you are checking user provided query string with all attributes of Flight. 
+    - Also In case, user send time in search query, then we need to return flights +- 3 hours from that time. 
+    - For simplicity, you can think, if user sends time in search query, it will be in format `HH:MM:SS`. 
 
 ## Hints
  - Nothing is needed from your side in pom.xml or application.properties

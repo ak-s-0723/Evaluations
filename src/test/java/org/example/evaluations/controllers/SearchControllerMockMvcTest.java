@@ -1,105 +1,111 @@
 package org.example.evaluations.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.example.evaluations.evaluation.controllers.UserSearchController;
-import org.example.evaluations.evaluation.dtos.UserSearchRequestDto;
-import org.example.evaluations.evaluation.models.Sex;
-import org.example.evaluations.evaluation.models.User;
-import org.example.evaluations.evaluation.services.UserSearchService;
+import org.example.evaluations.evaluation.controllers.SearchController;
+import org.example.evaluations.evaluation.models.Flight;
+import org.example.evaluations.evaluation.models.Size;
+import org.example.evaluations.evaluation.services.OpenSearchService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.http.MediaType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Arrays;
+import java.sql.Time;
+import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(UserSearchController.class)
+@WebMvcTest(SearchController.class)
 public class SearchControllerMockMvcTest {
 
     @Autowired
     private MockMvc mockMvc;
 
     @MockBean
-    private UserSearchService userSearchService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
+    private OpenSearchService openSearchService;
 
     @Test
-    public void testSearchUsersByAddress() throws Exception {
-        // Arrange
-        User user1 = createUser(1L, "user1@example.com", "User One", "1234567890", "Street", Sex.MALE,5);
-        User user2 = createUser(2L, "user2@example.com", "User Two", "0987654321", "Street", Sex.FEMALE,21);
+    public void testGetFlightsMatchingSearchQuery_WithValidTime() throws Exception {
+        // Given
+        String query = "14:30:00";
+        int pageSize = 10;
+        int pageNumber = 0;
 
-        List<User> users = Arrays.asList(user1, user2);
+        List<Flight> flights = new ArrayList<>();
+        Flight flight = new Flight();
+        flight.setFlightId("FL123");
+        flight.setAirlinesName("Airline A");
+        flight.setTime(Time.valueOf("14:30:00"));
+        flight.setSize(Size.LARGE);
+        flights.add(flight);
 
-        UserSearchRequestDto requestDto = new UserSearchRequestDto();
-        requestDto.setQuery("Street");
-        requestDto.setPageNumber(0);
+        Page<Flight> flightPage = new PageImpl<>(flights, PageRequest.of(pageNumber, pageSize), flights.size());
 
-        when(userSearchService.getUsersHavingAddress(any(String.class), any(Integer.class))).thenReturn(users);
+        // Mock the OpenSearchService behavior
+        when(openSearchService.getFlightsMatchingSearchQuery(query, pageSize, pageNumber)).thenReturn(flightPage);
 
-        // Act & Assert
-        mockMvc.perform(post("/search")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(requestDto)))
+        // When & Then
+        mockMvc.perform(get("/search/{query}", query)
+                        .param("pageSize", String.valueOf(pageSize))
+                        .param("pageNumber", String.valueOf(pageNumber)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].emailId").value("user1@example.com"))
-                .andExpect(jsonPath("$[1].id").value(2))
-                .andExpect(jsonPath("$[1].emailId").value("user2@example.com"));
+                .andExpect(jsonPath("$.content[0].flightId").value("FL123"))
+                .andExpect(jsonPath("$.content", org.hamcrest.Matchers.hasSize(1)));
     }
 
     @Test
-    public void testSearchLadies() throws Exception {
-        // Arrange
-        User user1 = createUser(1L, "lady1@example.com", "Lady One", "1234567890", "123 Street", Sex.FEMALE,12);
-        List<User> ladies = Arrays.asList(user1);
+    public void testGetFlightsMatchingSearchQuery_WithAirlinesName() throws Exception {
+        // Given
+        String query = "Airline A";
+        int pageSize = 10;
+        int pageNumber = 0;
 
-        when(userSearchService.getDetailsOfAllLadies(0)).thenReturn(ladies);
+        List<Flight> flights = new ArrayList<>();
+        Flight flight = new Flight();
+        flight.setSize(Size.MEDIUM);
+        flight.setFlightId("FL124");
+        flight.setAirlinesName("Airline A");
+        flights.add(flight);
 
-        // Act & Assert
-        mockMvc.perform(get("/search/ladies").param("pageNumber","0"))
+        Page<Flight> flightPage = new PageImpl<>(flights, PageRequest.of(pageNumber, pageSize), flights.size());
+
+        // Mock the OpenSearchService behavior
+        when(openSearchService.getFlightsMatchingSearchQuery(query, pageSize, pageNumber)).thenReturn(flightPage);
+
+        // When & Then
+        mockMvc.perform(get("/search/{query}", query)
+                        .param("pageSize", String.valueOf(pageSize))
+                        .param("pageNumber", String.valueOf(pageNumber)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].emailId").value("lady1@example.com"));
+                .andExpect(jsonPath("$.content[0].flightId").value("FL124"))
+                .andExpect(jsonPath("$.content", org.hamcrest.Matchers.hasSize(1)));
     }
 
     @Test
-    public void testSearchAdultMales() throws Exception {
-        // Arrange
-        User user1 = createUser(1L, "male1@example.com", "Male One", "1234567890", "123 Street", Sex.MALE,19);
-        List<User> males = Arrays.asList(user1);
+    public void testGetFlightsMatchingSearchQuery_NoResults() throws Exception {
+        // Given
+        String query = "Non-existent";
+        int pageSize = 10;
+        int pageNumber = 0;
 
-        when(userSearchService.getDetailsOfAllAdultMales(0)).thenReturn(males);
+        List<Flight> flights = new ArrayList<>();
+        Page<Flight> flightPage = new PageImpl<>(flights, PageRequest.of(pageNumber, pageSize), flights.size());
 
-        // Act & Assert
-        mockMvc.perform(get("/search/adultMales").param("pageNumber","0"))
+        // Mock the OpenSearchService behavior
+        when(openSearchService.getFlightsMatchingSearchQuery(query, pageSize, pageNumber)).thenReturn(flightPage);
+
+        // When & Then
+        mockMvc.perform(get("/search/{query}", query)
+                        .param("pageSize", String.valueOf(pageSize))
+                        .param("pageNumber", String.valueOf(pageNumber)))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$[0].id").value(1))
-                .andExpect(jsonPath("$[0].emailId").value("male1@example.com"));
-    }
-
-    private User createUser(Long id, String emailId, String name, String phoneNumber, String address, Sex sex, Integer age) {
-        User user = new User();
-        user.setId(id);
-        user.setEmailId(emailId);
-        user.setName(name);
-        user.setPhoneNumber(phoneNumber);
-        user.setAddress(address);
-        user.setSex(sex);
-        user.setAge(age);
-        return user;
+                .andExpect(jsonPath("$.content", org.hamcrest.Matchers.hasSize(0))); // Expecting no flights
     }
 }
