@@ -7,10 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @Service
 public class ClientService {
+
     @Autowired
     private ClientRepo clientRepo;
 
@@ -18,22 +17,10 @@ public class ClientService {
     private RedisTemplate<String,Object> redisTemplate;
 
     public Client getClientFromId(Long id) throws UserNotFoundException {
-
-        Optional<Client> clientOptional = clientRepo.findById(id);
-        if(clientOptional.isEmpty()) {
-            throw new UserNotFoundException("Please signup first");
-        }
-
-        return clientOptional.get();
+       return null;
     }
 
     public Client getClientFromEmail(String email) throws UserNotFoundException {
-        Client client = (Client) redisTemplate.opsForHash().get("CLIENTS",email);
-
-        if (client == null) {
-            throw new UserNotFoundException("Please signup first");
-        }
-
-        return client;
+       return null;
     }
 }
