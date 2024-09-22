@@ -1,25 +1,23 @@
-# Storing Client Profile in Cache as soon as a new user signup
+# Storing Popular Products a little different way for faster retrieval in Cache
 
 ## Requirements
 
-You are creating ClientSignup Service. As soon any new Client signs up, you store his details into Redis Cache and Database and next time whenever there is request for getting Client Details, either you get it from Redis Cache or from Database
+You are using redis cache as your data store for storing all products. But now, you also need to make retrieval of popular products like "iphone", "jordan" or "rolex" really faster in comparison to non-popular products. Design a technique using Redis Operations by which you can retrieve these popular products really quick as lot of requests will come for these products.
 
-- In SignupController, you need to implement an Api with path `/signup` accepting request in form of SignupRequestDto and returning created Client.
-- In ClientController, you need to implement 2 Apis
+- In ProductController, you need to implement 2 Apis with endpoint
         
-     - `/client/id/{id}`  to get Client details based on client Id
+     - `/product`  to add product accepting request in form of ProductRequestDto and returning created Product.      
      
-     - `/client/email/{email}` to get Client details based on Client Email
-- In SignupController, you need to add an exception handler for UserAlreadyExistsException, finally returning exception message.
-- In ClientController, you need to add an exception handler for UserNotFoundException, finally returning exception message.
-- These Exception classes are already present in exceptions folder. you just need to use them.
-- In SignupService, implement signup method, throw UserAlreadyExistsException with message `Please try out with some other email.` if user already exists, otherwise create client and persist in redis cache with KEYS ("CLIENTS",clientEmail). Also persist in DB.
-- In ClientService, implement getClientFromId method which will only check DB for Client, if not found throw UserNotFoundException with message `Please signup first`.
-- Also implement getClientFromEmail method in ClientService which will get client from Redis cache, if not found throw UserNotFoundException with message `Please signup first`.
+     - `/product` to get product details and returning in form of `Set<Product>`.
+
+- In ProductService, implement both methods with help of Redis Operations and fields. First key to use while storing can be `REDIS_KEY_POPULAR_PRODUCT` or `REDIS_KEY_NORMAL_PRODUCT` and second key can be productId.
+- Please consider this scenario for your implementation, as you guys know new Iphone has launched and lot of fans will be visiting site for checking product specs and checking iphone related accessories. So if customer is searching anything related to "iphone", it should be retrived faster from cache.
+
 - You are given RedisConfig, you also need to create bean of redisTemplate.
 
 ## Hints
 
 - Nothing is needed from your side in pom.xml or application.properties. Dependency is already added and properties are already set in application.properties.
 - If you will try to run testcases without providing solution, all Testcases will fail.
-- Nothing need to be done in dtos, models, exceptions. Please refer them for your understanding.
+- Nothing need to be done in dtos, models. Please refer them for your understanding.
+- You may need to use operationsForSet and operationsForHash both.

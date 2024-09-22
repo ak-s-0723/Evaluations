@@ -14,7 +14,7 @@ public class RedisBeanTest {
     private ApplicationContext applicationContext;
 
     @Test
-    public void testMyServiceBeanIsPresent() {
+    public void testRedisTemplateIsPresent() {
         boolean isRedisBeanPresent = applicationContext.containsBean("redisTemplate");
 
         assertThat(isRedisBeanPresent).isTrue();

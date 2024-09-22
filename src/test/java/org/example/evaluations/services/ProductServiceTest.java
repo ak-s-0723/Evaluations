@@ -121,7 +121,3 @@ public class ProductServiceTest {
     }
 }
 
-//insta influencers having more reach, or followes, give them blue tick
-//design nearby, look for opsforgeo, chatgpt
-//https://medium.com/@hulunhao/how-to-use-redis-template-in-java-spring-boot-647a7eb8f8cc
-//https://github.com/ak-s-0723/Evaluations/blob/class18_ques2/src/test/java/org/example/evaluations/services/SignupServiceTest.java
