@@ -12,13 +12,14 @@ import java.io.Serializable;
 @Setter
 @Getter
 @Entity
-public class Product_ implements Serializable {
+public class Restaurant_ implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String description;
-    private String category;
-    private String imageUrl;
-    private Double price;
+    private String name;
+    private double latitude;
+    private double longitude;
+    private Double userRatings;
+    private String address;
+    private String phoneNumber;
 }
