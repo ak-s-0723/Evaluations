@@ -1,13 +1,14 @@
 package org.example.evaluations.evaluation.controllers;
 
-import org.example.evaluations.evaluation.services.ProductService;
+import org.example.evaluations.evaluation.services.InfluencerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/product")
-public class ProductController {
+public class InfluencerController {
 
     @Autowired
-    private ProductService productService;
+    private InfluencerService influencerService;
+
+    //Add your APIs here.
 }

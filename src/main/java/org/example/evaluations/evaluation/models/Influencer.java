@@ -12,13 +12,20 @@ import java.io.Serializable;
 @Setter
 @Getter
 @Entity
-public class Product implements Serializable {
+public class Influencer implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String description;
-    private String category;
-    private String imageUrl;
-    private Double price;
+
+    private String name;
+
+    private Long followers;
+
+    private Long totalPostReach;
+
+    private String displayPictureUrl;
+
+    private Long totalPosts;
+
+    private String bio;
 }
