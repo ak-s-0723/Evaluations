@@ -1,4 +1,4 @@
-package org.example.evaluations.evaluation.models;
+package org.example.evaluations.implementation.models;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -7,18 +7,15 @@ import jakarta.persistence.Id;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.io.Serializable;
-
-@Setter
 @Getter
-@Entity
-public class Product implements Serializable {
+@Setter
+@Entity(name = "user___")
+public class User_ {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String title;
-    private String description;
-    private String category;
-    private String imageUrl;
-    private Double price;
+
+    private String email;
+
+    private String password;
 }
