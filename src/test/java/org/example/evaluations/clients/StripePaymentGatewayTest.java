@@ -25,7 +25,7 @@ public class StripePaymentGatewayTest {
     private String apiKey;
 
     @Test
-    void testGetPaymentLinkSuccess() {
+    void testCreateSession() {
         // Arrange
         List<Long> amounts = new ArrayList<Long>();
         List<Long> quantities = new ArrayList<Long>();
