@@ -1,7 +1,7 @@
 package org.example.evaluations.evaluation.controllers;
 
-import org.example.evaluations.evaluation.models.Cart;
 import org.example.evaluations.evaluation.models.User;
+import org.example.evaluations.evaluation.models.Cart;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -21,24 +21,24 @@ public class CartController {
 
     @PostMapping
     public Cart createCart(@RequestBody Cart req) {
-            Cart cart = new Cart();
-            cart.setFriendlyName(req.getFriendlyName());
-            cart.setTotalValue(req.getTotalValue());
-            cart.setId(req.getId());
-            User user = new User();
-            if(req.getUser() == null) {
-              throw new NullPointerException("No User associated with Cart");
-            }
-            user.setName(req.getUser().getName());
-            user.setId(req.getUser().getId());
+        Cart cart = new Cart();
+        cart.setFriendlyName(req.getFriendlyName());
+        cart.setTotalValue(req.getTotalValue());
+        cart.setId(req.getId());
+        User user = new User();
+        if(req.getUser() == null) {
+            throw new NullPointerException("No User associated with Cart");
+        }
+        user.setName(req.getUser().getName());
+        user.setId(req.getUser().getId());
 
-            List<String> items= new ArrayList<>();
-            for(int s=0;s<=req.getUniqueItems().size();s++) {
-                items.add(req.getUniqueItems().get(s));
-            }
-            cart.setUniqueItems(items);
+        List<String> items= new ArrayList<>();
+        for(int s=0;s<=req.getUniqueItems().size();s++) {
+            items.add(req.getUniqueItems().get(s));
+        }
+        cart.setUniqueItems(items);
 
-            return cart;
+        return cart;
     }
 
     @GetMapping("/{userId}/{cartId}")
