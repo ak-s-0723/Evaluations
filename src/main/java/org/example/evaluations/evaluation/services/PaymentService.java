@@ -14,17 +14,14 @@ public class PaymentService implements IPaymentService {
     private StripePaymentGateway stripePaymentGateway;
 
     public String createPaymentIntent(Long amount){
-        //Add your implementation here
-        return null;
+        return stripePaymentGateway.createPaymentIntent(amount);
     }
 
     public List<PaymentIntent> listPaymentIntents() {
-        //Add your implementation here
-        return null;
+        return stripePaymentGateway.listPaymentIntents();
     }
 
     public Boolean cancelPaymentIntent(String id) {
-        //Add your implementation here
-        return null;
+        return stripePaymentGateway.cancelPaymentIntent(id);
     }
 }
