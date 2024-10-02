@@ -15,17 +15,14 @@ public class WebhookService implements IWebhookService {
     private StripePaymentGateway stripePaymentGateway;
 
     public Webhook createWebhook(String url, List<String> events) {
-        //Add your implementation here
-        return null;
+        return stripePaymentGateway.createWebhook(url,events);
     }
 
     public Boolean deleteWebhook(String webhookId) {
-        //Add your implementation here
-        return null;
+        return stripePaymentGateway.deleteWebhook(webhookId);
     }
 
     public Webhook updateWebhook(String updatedUrl, List<String> events, String webhookId) {
-        //Add your implementation here
-        return null;
+        return stripePaymentGateway.updateWebhook(updatedUrl, events, webhookId);
     }
 }
