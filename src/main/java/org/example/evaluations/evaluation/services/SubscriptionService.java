@@ -13,7 +13,6 @@ public class SubscriptionService implements ISubscriptionService {
     private StripePaymentGateway stripePaymentGateway;
 
     public String createSubscriptionForProduct(String customerName,String customerEmail,Long productAmount, String productName, PlanCreateParams.Interval interval) {
-        //Add your implementation here
-        return null;
+        return stripePaymentGateway.createSubscriptionForProduct(customerName, customerEmail, productAmount, productName, interval);
     }
 }
