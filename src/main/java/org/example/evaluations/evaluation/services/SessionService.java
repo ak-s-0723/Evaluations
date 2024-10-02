@@ -14,7 +14,6 @@ public class SessionService implements ISessionService {
     private StripePaymentGateway stripePaymentGateway;
 
     public SessionDto createSession(String successUrl, List<Long> amounts, List<String> productNames, List<Long> quantities) {
-        //Add implementation here
-        return null;
+        return stripePaymentGateway.createSession(successUrl,amounts,productNames,quantities);
     }
 }
