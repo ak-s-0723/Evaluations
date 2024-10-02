@@ -11,7 +11,6 @@ public class PaymentService implements IPaymentService {
     private StripePaymentGateway stripePaymentGateway;
 
     public String getPaymentLink(Long amount, Long quantity, String callbackUrl, String productName) {
-        //Add your implementation here
-        return null;
+        return stripePaymentGateway.getPaymentLink(amount,quantity,callbackUrl,productName);
     }
 }
