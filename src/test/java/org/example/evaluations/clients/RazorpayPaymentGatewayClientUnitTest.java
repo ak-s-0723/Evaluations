@@ -58,7 +58,7 @@ public class RazorpayPaymentGatewayClientUnitTest {
     }
 
     @Test
-    void testInitiatePaymentThrowsException() throws RazorpayException {
+    void testCompletePaymentThrowsException() throws RazorpayException {
         // Arrange
         when(paymentLinkClient.create(argThat(new JSONObjectMatcher("Payment for services",500.0,"John Doe","john.doe@example.com","1234567890",true,true,"Jeevan Bima","OID12345","https://www.scaler.com","get"))))
                 .thenThrow(new RazorpayException("Failed to create payment link"));
