@@ -1,4 +1,4 @@
-package org.example.evaluations.implementation.config;
+package org.example.evaluations.evaluation.config;
 
 import com.razorpay.RazorpayClient;
 import com.razorpay.RazorpayException;
@@ -7,7 +7,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RazorpayConfig_ {
+public class RazorpayConfig {
 
     @Value("${razorpay.id}")
     private String razorpayKeyId;
@@ -15,9 +15,8 @@ public class RazorpayConfig_ {
     @Value("${razorpay.secret}")
     private String razorpayKeySecret;
 
-//Commenting so that this doesn't collide with bean added in evaluation project
-//    @Bean
-//    public RazorpayClient getRazorpayClient() throws RazorpayException {
-//        return new RazorpayClient(razorpayKeyId,razorpayKeySecret);
-//    }
+    @Bean
+    public RazorpayClient getRazorpayClient() throws RazorpayException {
+        return new RazorpayClient(razorpayKeyId,razorpayKeySecret);
+    }
 }

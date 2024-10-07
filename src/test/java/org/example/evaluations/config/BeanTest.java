@@ -15,7 +15,7 @@ public class BeanTest {
     private ApplicationContext applicationContext;
 
     @Test
-    void testMyServiceBeanPresence() {
+    void testRazorpayBeanPresence() {
         RazorpayClient razorpayClientBean = applicationContext.getBean(RazorpayClient.class);
         assertNotNull(razorpayClientBean, "RazorpayClient bean should be present in the application context");
     }
