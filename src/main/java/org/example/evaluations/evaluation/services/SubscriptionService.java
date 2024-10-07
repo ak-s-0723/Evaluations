@@ -17,7 +17,6 @@ public class SubscriptionService implements ISubscriptionService {
 
     @Override
     public String createSubscription(CreateSubscriptionRequest subscriptionRequest) {
-        //Add your implementation here
-        return null;
+        return razorpayPaymentGatewayClient.createSubscriptionLink(requestConverter.from(subscriptionRequest)).get("short_url").toString();
     }
 }
