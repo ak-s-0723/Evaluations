@@ -18,3 +18,4 @@ You need not to do any changes in `dtos`. Just refer them for better understandi
  - No new file need to be created.
  - If you will try to run testcases without providing solution, all Testcases will fail.
  - You can refer to [link](https://razorpay.com/docs/api/x/payouts/create/bank-account/) for help. Read it thoroughly.
+ - You can use RestTemplateBuilder for calling Razorpay API.
