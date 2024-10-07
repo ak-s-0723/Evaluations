@@ -12,10 +12,10 @@ public class RefundService implements IRefundService {
     private RazorpayPaymentGatewayClient razorpayPaymentGatewayClient;
 
     public String issueRefund(Double amount, String receipt) {
-       return null;
+        return razorpayPaymentGatewayClient.issueInstantRefund(amount,receipt);
     }
 
     public String updateRefund(String refundId, JSONObject jsonObject) {
-       return null;
+       return razorpayPaymentGatewayClient.updateRefund(refundId,jsonObject);
     }
 }
