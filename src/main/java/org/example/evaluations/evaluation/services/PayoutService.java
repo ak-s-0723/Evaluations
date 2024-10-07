@@ -13,7 +13,6 @@ public class PayoutService implements IPayoutService {
 
     @Override
     public String createPayoutToBankAccount(String accountNumber, Double amount, PayoutPurpose purpose, String referenceId, String narration) {
-        //Add your implementation here
-        return null;
+        return razorpayPaymentGatewayClient.createPayoutToBankAccount(accountNumber,amount,purpose,referenceId,narration);
     }
 }
