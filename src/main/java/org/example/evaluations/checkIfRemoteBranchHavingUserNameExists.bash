@@ -1,7 +1,7 @@
 REMOTE_NAME="origin"
 USER=`whoami`
 BRANCH_NAME="multiplier_$USER"
-COMMIT_MESSAGE="Added1 Subtractor Functionality"
+COMMIT_MESSAGE="Added Subtractor Functionality"
 
 echo "Fetching latest remote references..."
 git fetch "$REMOTE_NAME"
